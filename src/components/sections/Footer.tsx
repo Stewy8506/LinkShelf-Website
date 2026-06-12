@@ -15,13 +15,15 @@ export function Footer() {
           <p className="text-foreground/50 text-sm font-light leading-relaxed mb-8">
             Your reading list, decaying in real time. Take control of your digital backlog by letting it rot.
           </p>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-6 py-3 bg-foreground text-background rounded-full font-medium text-sm hover:bg-foreground/90 transition-colors cursor-pointer"
-          >
-            Download for macOS
-          </motion.button>
+          <a href="https://github.com/Stewy8506/LinkShelf/releases/latest/download/linkshelf-macos.zip">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-6 py-3 bg-foreground text-background rounded-full font-medium text-sm hover:bg-foreground/90 transition-colors cursor-pointer"
+            >
+              Download for macOS
+            </motion.button>
+          </a>
           <div className="flex gap-4 mt-4 text-xs font-mono opacity-50">
             <span>Also available for iOS, Android</span>
           </div>
@@ -31,10 +33,15 @@ export function Footer() {
           <div>
             <h4 className="font-mono text-xs uppercase tracking-widest text-foreground/40 mb-6">Product</h4>
             <ul className="space-y-4">
-              {["Downloads", "Changelog", "Features", "Pricing"].map((item) => (
-                <li key={item}>
-                  <a href="#" className="text-sm text-foreground/70 hover:text-foreground transition-colors flex items-center gap-1 group">
-                    {item}
+              {[
+                { name: "Downloads", href: "#download" },
+                { name: "Changelog", href: "https://github.com/Stewy8506/LinkShelf/releases" },
+                { name: "Features", href: "#features" },
+                { name: "Pricing", href: "#" }
+              ].map((item) => (
+                <li key={item.name}>
+                  <a href={item.href} className="text-sm text-foreground/70 hover:text-foreground transition-colors flex items-center gap-1 group">
+                    {item.name}
                     <ArrowUpRight size={14} className="opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all" />
                   </a>
                 </li>

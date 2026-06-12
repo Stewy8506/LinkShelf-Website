@@ -14,13 +14,15 @@ export function Header() {
       </div>
 
       <div className="pointer-events-auto">
-        <motion.button
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.98 }}
-          className="px-4 py-1.5 bg-text-primary text-background rounded-full font-semibold text-xs hover:bg-text-primary/95 transition-colors cursor-pointer"
-        >
-          Download
-        </motion.button>
+        <a href="#download">
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.98 }}
+            className="px-4 py-1.5 bg-text-primary text-background rounded-full font-semibold text-xs hover:bg-text-primary/95 transition-colors cursor-pointer"
+          >
+            Download
+          </motion.button>
+        </a>
       </div>
     </header>
   );

@@ -22,7 +22,7 @@ export function Hero() {
             <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-fresh-high"></span>
           </span>
           <span className="text-[10px] font-mono tracking-[0.12em] text-text-secondary uppercase">
-            LinkShelf <span className="text-text-primary font-medium">v1.0.0</span>
+            LinkShelf <span className="text-text-primary font-medium">v1.0.1</span>
           </span>
         </motion.div>
 
@@ -53,14 +53,19 @@ export function Hero() {
           transition={{ duration: 1, delay: 1 }}
           className="mt-8 md:mt-10 flex flex-col sm:flex-row items-center gap-4 z-20 w-full sm:w-auto px-4 sm:px-0"
         >
-          <motion.button
-            whileHover={{ scale: 1.03, y: -1 }}
-            whileTap={{ scale: 0.98 }}
-            className="w-full sm:w-auto px-6 py-3.5 bg-text-primary text-background rounded-full font-semibold text-sm hover:bg-text-primary/95 transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer"
+          <a
+            href="https://github.com/Stewy8506/LinkShelf/releases/latest/download/linkshelf-macos.zip"
+            className="w-full sm:w-auto"
           >
-            Download for macOS
-            <span className="text-[10px] opacity-60 font-mono">v1.0.0</span>
-          </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.03, y: -1 }}
+              whileTap={{ scale: 0.98 }}
+              className="w-full px-6 py-3.5 bg-text-primary text-background rounded-full font-semibold text-sm hover:bg-text-primary/95 transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer"
+            >
+              Download for macOS
+              <span className="text-[10px] opacity-60 font-mono">v1.0.1</span>
+            </motion.button>
+          </a>
           
           <a
             href="#features"

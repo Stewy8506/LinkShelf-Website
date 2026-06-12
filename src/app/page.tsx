@@ -6,6 +6,7 @@ import { Philosophy } from "@/components/sections/Philosophy";
 import { FreshnessEngine } from "@/components/sections/FreshnessEngine";
 import { Features } from "@/components/sections/Features";
 import { Architecture } from "@/components/sections/Architecture";
+import { Download } from "@/components/sections/Download";
 import { Footer } from "@/components/sections/Footer";
 
 export default function Home() {
@@ -20,8 +21,10 @@ export default function Home() {
         <FreshnessEngine />
         <Features />
         <Architecture />
+        <Download />
         <Footer />
       </main>
     </SmoothScroll>
   );
 }
+
