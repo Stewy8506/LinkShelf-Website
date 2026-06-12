@@ -1,8 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #0a0a0a;
-  --color-foreground: #ededed;
+  --color-background: #0C0C0C;
+  --color-surface: #161616;
+  --color-card: #1E1E1E;
+  --color-border: #2A2A2A;
+  
+  --color-text-primary: #EDEDEC;
+  --color-text-secondary: #888886;
+  --color-text-tertiary: #525250;
+  
+  --color-accent: #A8A29E;
+  --color-accent-muted: #78716C;
   
   --color-fresh-high: #86EFAC;
   --color-fresh-mid: #FBBF24;
@@ -17,12 +26,12 @@
 
 html, body {
   background-color: var(--color-background);
-  color: var(--color-foreground);
+  color: var(--color-text-primary);
   font-family: var(--font-sans), sans-serif;
   margin: 0;
   padding: 0;
-  /* Prevent horizontal scroll issues with 3D canvas */
-  overflow-x: hidden;
+  /* Prevent horizontal scroll issues with 3D canvas without breaking position: sticky */
+  overflow-x: clip;
   /* Dark aesthetic everywhere */
   @apply antialiased selection:bg-fresh-high/30 selection:text-fresh-high;
 }

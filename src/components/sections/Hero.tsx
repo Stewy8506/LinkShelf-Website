@@ -9,13 +9,13 @@ export function Hero() {
   const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center pt-32 pb-20 px-6 md:px-12 overflow-hidden">
+    <section className="relative min-h-screen flex flex-col items-center justify-center pt-32 pb-24 px-6 md:px-12 overflow-hidden">
       <div className="max-w-5xl w-full z-10 flex flex-col items-center text-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-6 flex items-center gap-3 px-4 py-1.5 rounded-full border border-foreground/10 bg-background/50 backdrop-blur-md"
+          className="mb-6 flex items-center gap-3 px-4 py-1.5 rounded-full border-[0.5px] border-border bg-card shadow-lg"
         >
           <div className="w-2 h-2 rounded-full bg-fresh-high animate-pulse" />
           <span className="text-sm font-medium tracking-wide opacity-80 uppercase">LinkShelf 1.0</span>

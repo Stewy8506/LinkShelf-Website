@@ -29,7 +29,7 @@ const features = [
 export function Features() {
   return (
     <section className="relative py-32 px-6 md:px-12 max-w-6xl mx-auto z-10 bg-background">
-      <div className="text-center mb-20">
+      <div className="text-center mb-24">
         <h2 className="text-3xl md:text-5xl font-medium tracking-tight">Engineered for focus.</h2>
       </div>
 
@@ -41,13 +41,13 @@ export function Features() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.8, delay: i * 0.1, ease: "easeOut" }}
-            className="p-8 rounded-3xl bg-background border border-foreground/5 hover:border-foreground/20 transition-colors group"
+            className="p-8 rounded-[12px] bg-card border-[0.5px] border-border hover:border-text-secondary/30 transition-all duration-300 group hover:-translate-y-1"
           >
-            <div className="mb-6 inline-flex p-3 rounded-2xl bg-foreground/5 text-foreground group-hover:scale-110 group-hover:bg-fresh-high/10 group-hover:text-fresh-high transition-all">
+            <div className="mb-6 inline-flex p-3 rounded-[8px] bg-surface border-[0.5px] border-border text-text-secondary group-hover:text-text-primary group-hover:border-text-secondary/30 transition-all duration-300">
               {feature.icon}
             </div>
-            <h3 className="text-xl font-medium mb-3">{feature.title}</h3>
-            <p className="text-foreground/60 font-light leading-relaxed">
+            <h3 className="text-xl font-medium mb-4 text-text-primary">{feature.title}</h3>
+            <p className="text-text-secondary font-light leading-relaxed">
               {feature.description}
             </p>
           </motion.div>

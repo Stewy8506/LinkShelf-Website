@@ -12,7 +12,7 @@ export default function Home() {
     <SmoothScroll>
       <AtmosphereCanvas />
       
-      <main className="relative z-10 w-full overflow-hidden">
+      <main className="relative z-10 w-full">
         <Hero />
         <Philosophy />
         <FreshnessEngine />
