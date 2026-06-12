@@ -7,6 +7,7 @@ export function Hero() {
   const { scrollYProgress } = useScroll();
   const y1 = useTransform(scrollYProgress, [0, 1], [0, 200]);
   const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  const scrollIndicatorOpacity = useTransform(scrollYProgress, [0, 0.05], [0.6, 0]);
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center pt-28 md:pt-36 pb-16 md:pb-24 px-6 md:px-12 overflow-hidden">
@@ -93,17 +94,32 @@ export function Hero() {
       {/* Floating Interactive Links Simulation */}
       <div className="absolute inset-0 z-0 pointer-events-none perspective-1000 hidden xl:block">
         <div className="max-w-[1440px] h-full mx-auto relative">
-          <div className="absolute top-[16%] left-[2%] 2xl:left-[6%] rotate-[-8deg] opacity-80 scale-90 2xl:scale-100">
+          <div className="absolute top-[16%] left-[2%] 2xl:left-[6%] rotate-[-8deg] opacity-80 scale-90 2xl:scale-100 pointer-events-auto">
             <DecayingLink title="How to build an atmospheric website" url="design.engineering/atmospheric" freshness={0.92} delay={0.4} className="w-[280px] lg:w-[300px]" />
           </div>
-          <div className="absolute top-[46%] right-[2%] 2xl:right-[6%] rotate-[6deg] opacity-70 scale-90 2xl:scale-100">
+          <div className="absolute top-[46%] right-[2%] 2xl:right-[6%] rotate-[6deg] opacity-70 scale-90 2xl:scale-100 pointer-events-auto">
             <DecayingLink title="The Psychology of Information Overload" url="behavior.io/info-overload" freshness={0.45} delay={0.6} className="w-[300px] lg:w-[320px]" />
           </div>
-          <div className="absolute top-[76%] left-[1%] 2xl:left-[5%] rotate-[-4deg] opacity-50 scale-90 2xl:scale-100">
+          <div className="absolute top-[76%] left-[1%] 2xl:left-[5%] rotate-[-4deg] opacity-50 scale-90 2xl:scale-100 pointer-events-auto">
             <DecayingLink title="React 19 compiler internals" url="react.dev/compiler" freshness={0.12} delay={0.8} className="w-[260px] lg:w-[280px]" />
           </div>
         </div>
       </div>
+
+      {/* Scroll Indicator */}
+      <motion.div
+        style={{ opacity: scrollIndicatorOpacity }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 font-mono text-[9px] uppercase tracking-widest text-text-tertiary select-none pointer-events-none hidden md:flex"
+      >
+        <span className="animate-pulse">Scroll to decay</span>
+        <div className="w-5 h-8 rounded-full border border-border/60 flex justify-center p-1.5 bg-card/10">
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
+            className="w-1.5 h-1.5 bg-text-secondary rounded-full"
+          />
+        </div>
+      </motion.div>
     </section>
   );
 }

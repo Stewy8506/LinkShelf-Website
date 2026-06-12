@@ -51,6 +51,42 @@ export function FreshnessEngine() {
           
           <motion.div className="w-full relative z-10 bg-surface p-6 md:p-8 rounded-[16px] border-[0.5px] border-border shadow-2xl">
             <h3 className="text-xs font-mono mb-4 md:mb-6 text-text-tertiary uppercase tracking-widest text-center">Simulation</h3>
+
+            {/* Timeline Progress Scrubber */}
+            <div className="mb-8 max-w-md mx-auto relative px-2">
+              <div className="absolute top-1/2 left-0 right-0 h-[1px] bg-border -translate-y-1/2" />
+              <div 
+                className="absolute top-1/2 left-0 h-[1.5px] bg-fresh-high -translate-y-1/2 transition-all duration-100 ease-out" 
+                style={{ width: `${progress * 100}%` }}
+              />
+              <div className="relative flex justify-between">
+                {[
+                  { name: "Day 1", desc: "Fresh", color: "bg-fresh-high border-fresh-high", val: 0 },
+                  { name: "Day 7", desc: "Fade", color: "bg-fresh-mid border-fresh-mid", val: 0.4 },
+                  { name: "Day 30", desc: "Rot", color: "bg-fresh-low border-fresh-low", val: 0.8 }
+                ].map((m, idx) => {
+                  const isActive = progress >= m.val;
+                  return (
+                    <div key={idx} className="flex flex-col items-center select-none bg-surface px-2 relative z-10">
+                      <div className={`w-3.5 h-3.5 rounded-full border-[2px] transition-all flex items-center justify-center ${
+                        isActive 
+                          ? `${m.color} border-text-primary` 
+                          : "bg-card border-border"
+                      }`}>
+                        {isActive && <div className="w-1 h-1 rounded-full bg-background" />}
+                      </div>
+                      <span className={`text-[9px] font-mono mt-1.5 transition-colors uppercase tracking-wider ${isActive ? "text-text-primary" : "text-text-tertiary"}`}>
+                        {m.name}
+                      </span>
+                      <span className={`text-[8px] font-sans font-light mt-0.5 transition-colors ${isActive ? "text-text-secondary" : "text-text-tertiary/70"}`}>
+                        {m.desc}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
             <div className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
                 <DecayingLink title="Why Next.js App Router is the future" url="vercel.com/blog/app-router" freshness={card1Freshness} className="mx-0" />

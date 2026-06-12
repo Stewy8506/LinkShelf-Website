@@ -26,12 +26,36 @@ export function Architecture() {
             </div>
             
             {/* Connecting lines */}
-            <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-40" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-50" viewBox="0 0 100 100" preserveAspectRatio="none">
               <path d="M 50 50 L 10 20" stroke="var(--color-border)" strokeWidth="0.5" fill="none" />
               <path d="M 50 50 L 90 20" stroke="var(--color-border)" strokeWidth="0.5" fill="none" />
               <path d="M 50 50 L 10 80" stroke="var(--color-border)" strokeWidth="0.5" fill="none" />
               <path d="M 50 50 L 90 80" stroke="var(--color-border)" strokeWidth="0.5" fill="none" />
+              
+              {/* Dynamic Flow lines overlay */}
+              <path d="M 50 50 L 10 20" stroke="var(--color-fresh-high)" strokeWidth="0.8" fill="none" strokeDasharray="4, 12" className="animate-flow-svg-reverse" />
+              <path d="M 50 50 L 90 20" stroke="var(--color-fresh-high)" strokeWidth="0.8" fill="none" strokeDasharray="4, 12" className="animate-flow-svg" />
+              <path d="M 50 50 L 10 80" stroke="var(--color-fresh-high)" strokeWidth="0.8" fill="none" strokeDasharray="4, 12" className="animate-flow-svg-reverse" />
+              <path d="M 50 50 L 90 80" stroke="var(--color-fresh-high)" strokeWidth="0.8" fill="none" strokeDasharray="4, 12" className="animate-flow-svg" />
             </svg>
+            <style>{`
+              @keyframes svg-flow {
+                to {
+                  stroke-dashoffset: -16;
+                }
+              }
+              @keyframes svg-flow-reverse {
+                to {
+                  stroke-dashoffset: 16;
+                }
+              }
+              .animate-flow-svg {
+                animation: svg-flow 3s linear infinite;
+              }
+              .animate-flow-svg-reverse {
+                animation: svg-flow-reverse 3s linear infinite;
+              }
+            `}</style>
           </div>
         </motion.div>
 

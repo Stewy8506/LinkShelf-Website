@@ -1,66 +1,117 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Smartphone, Layers, LineChart, Globe } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 
 // ─── 1. Cross-Platform Sync Visual ──────────────────────────────────────────
 function SyncVisual() {
+  const [syncing, setSyncing] = useState(false);
+  const [synced, setSynced] = useState(false);
+  const [percent, setPercent] = useState(64);
+
+  const triggerSync = () => {
+    if (syncing) return;
+    setSyncing(true);
+    setSynced(false);
+    
+    // Simulate gradual sync percentage increase
+    let current = 64;
+    const interval = setInterval(() => {
+      current += 6;
+      if (current >= 92) {
+        current = 92;
+        clearInterval(interval);
+        setSyncing(false);
+        setSynced(true);
+      }
+      setPercent(current);
+    }, 120);
+  };
+
   return (
-    <div className="h-44 w-full bg-surface border-[0.5px] border-border rounded-[8px] flex items-center justify-center p-4 relative overflow-hidden mt-6 shadow-inner">
+    <div className="h-44 w-full bg-surface border-[0.5px] border-border rounded-[8px] flex flex-col items-center justify-between p-4 relative overflow-hidden mt-6 shadow-inner group/sync">
       {/* Grid Pattern Background */}
       <div className="absolute inset-0 opacity-[0.03]" style={{
         backgroundImage: 'radial-gradient(circle at 1px 1px, var(--color-text-primary) 1px, transparent 0)',
         backgroundSize: '16px 16px'
       }} />
 
-      <div className="flex items-center gap-2 sm:gap-4 z-10 w-full justify-around max-w-sm">
+      <div className="flex items-center gap-2 sm:gap-4 z-10 w-full justify-around max-w-sm flex-1">
         {/* Desktop Screen mockup */}
-        <div className="w-24 sm:w-28 bg-card border-[0.5px] border-border rounded-[6px] p-2 flex flex-col gap-1.5 shadow-lg">
+        <div className="w-24 sm:w-28 bg-card border-[0.5px] border-border rounded-[6px] p-2 flex flex-col gap-1.5 shadow-lg select-none">
           <div className="flex gap-1">
             <div className="w-1 h-1 rounded-full bg-fresh-low/60" />
             <div className="w-1 h-1 rounded-full bg-fresh-mid/60" />
             <div className="w-1 h-1 rounded-full bg-fresh-high/60" />
           </div>
           <div className="h-7 w-full bg-surface rounded-[4px] border-[0.5px] border-border flex items-center px-1.5 justify-between relative overflow-hidden">
-            <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-fresh-high" />
+            <div className={`absolute left-0 top-0 bottom-0 w-[2px] transition-colors duration-300 ${synced ? "bg-fresh-high" : "bg-fresh-mid"}`} />
             <span className="text-[7.5px] text-text-primary truncate font-medium max-w-[40px] sm:max-w-[50px]">React 19 internals</span>
-            <span className="text-[6px] text-text-secondary font-mono">92%</span>
+            <span className="text-[6px] text-text-secondary font-mono transition-all duration-300">{percent}%</span>
           </div>
         </div>
 
-        {/* Sync Indicator */}
+        {/* Sync Indicator with spin action */}
         <div className="flex flex-col items-center gap-1.5 relative">
           <div className="flex gap-1 sm:gap-1.5 items-center">
             <div className="h-0.5 w-4 sm:w-6 bg-border relative overflow-hidden">
-              <motion.div 
-                animate={{ x: ["-100%", "100%"] }}
-                transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
-                className="absolute inset-y-0 left-0 w-2.5 bg-fresh-high"
-              />
+              {(syncing || !synced) && (
+                <motion.div 
+                  animate={{ x: ["-100%", "100%"] }}
+                  transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
+                  className="absolute inset-y-0 left-0 w-2.5 bg-fresh-high"
+                />
+              )}
             </div>
-            <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-fresh-high/20 border-[0.5px] border-fresh-high flex items-center justify-center">
-              <div className="w-0.5 h-0.5 sm:w-1 sm:h-1 rounded-full bg-fresh-high animate-ping" />
-            </div>
+            <button 
+              onClick={triggerSync}
+              className={`w-5 h-5 rounded-full border-[0.5px] flex items-center justify-center cursor-pointer transition-all duration-300 ${
+                syncing 
+                  ? "bg-fresh-high/10 border-fresh-high text-fresh-high animate-spin" 
+                  : synced 
+                  ? "bg-fresh-high/20 border-fresh-high text-fresh-high scale-105" 
+                  : "bg-card border-border text-text-secondary hover:text-text-primary hover:border-text-secondary/40"
+              }`}
+              title="Force Sync"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-2.5 h-2.5">
+                {synced && !syncing ? (
+                  <path d="M20 6 9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+                ) : (
+                  <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16m0 0v5m0-5h-5" strokeLinecap="round" strokeLinejoin="round" />
+                )}
+              </svg>
+            </button>
             <div className="h-0.5 w-4 sm:w-6 bg-border relative overflow-hidden">
-              <motion.div 
-                animate={{ x: ["-100%", "100%"] }}
-                transition={{ repeat: Infinity, duration: 1.5, ease: "linear", delay: 0.75 }}
-                className="absolute inset-y-0 left-0 w-2.5 bg-fresh-high"
-              />
+              {(syncing || !synced) && (
+                <motion.div 
+                  animate={{ x: ["-100%", "100%"] }}
+                  transition={{ repeat: Infinity, duration: 1.2, ease: "linear", delay: 0.6 }}
+                  className="absolute inset-y-0 left-0 w-2.5 bg-fresh-high"
+                />
+              )}
             </div>
           </div>
-          <span className="text-[7px] sm:text-[8px] font-mono tracking-widest text-fresh-high uppercase animate-pulse">Syncing</span>
+          <span className={`text-[7px] sm:text-[8px] font-mono tracking-widest uppercase transition-colors duration-300 ${
+            syncing 
+              ? "text-fresh-high animate-pulse" 
+              : synced 
+              ? "text-fresh-high/80" 
+              : "text-text-tertiary"
+          }`}>
+            {syncing ? "Syncing" : synced ? "Synced" : "Sync Shelf"}
+          </span>
         </div>
 
         {/* Mobile Screen mockup */}
-        <div className="w-[52px] sm:w-[64px] h-[72px] sm:h-20 bg-card border-[0.5px] border-border rounded-[8px] p-1.5 sm:p-2 flex flex-col gap-1 sm:gap-1.5 shadow-lg relative">
+        <div className="w-[52px] sm:w-[64px] h-[72px] sm:h-20 bg-card border-[0.5px] border-border rounded-[8px] p-1.5 sm:p-2 flex flex-col gap-1 sm:gap-1.5 shadow-lg relative select-none">
           <div className="w-6 sm:w-8 h-0.5 sm:h-1 bg-border rounded-full mx-auto" />
           <div className="h-7 w-full bg-surface rounded-[4px] border-[0.5px] border-border flex flex-col justify-center px-1 sm:px-1.5 relative overflow-hidden mt-1 sm:mt-1.5">
-            <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-fresh-high" />
+            <div className={`absolute left-0 top-0 bottom-0 w-[2px] transition-colors duration-300 ${synced ? "bg-fresh-high" : "bg-fresh-mid"}`} />
             <span className="text-[6px] sm:text-[6.5px] text-text-primary truncate font-medium">React 19 internals</span>
-            <span className="text-[5px] sm:text-[5.5px] text-text-secondary mt-0.5 font-sans">react.dev</span>
+            <span className="text-[5px] sm:text-[5.5px] text-text-secondary mt-0.5 font-sans font-mono transition-all duration-300">{percent}%</span>
           </div>
         </div>
       </div>
@@ -144,8 +195,23 @@ function SmartListsVisual() {
 
 // ─── 3. Reading Analytics Visual ────────────────────────────────────────────
 function AnalyticsVisual() {
+  const [hoveredSegment, setHoveredSegment] = useState<"fresh" | "fading" | "stale" | null>(null);
+
+  const getTooltipText = () => {
+    switch (hoveredSegment) {
+      case "fresh":
+        return "11 active links — full freshness, read now";
+      case "fading":
+        return "5 fading links — losing freshness, read within 3 days";
+      case "stale":
+        return "2 stale links — critical state, rots in 24 hours";
+      default:
+        return "Hover segments to inspect shelf health";
+    }
+  };
+
   return (
-    <div className="h-44 w-full bg-surface border-[0.5px] border-border rounded-[8px] flex flex-col p-4 mt-6 overflow-hidden relative justify-center gap-3 shadow-inner">
+    <div className="h-44 w-full bg-surface border-[0.5px] border-border rounded-[8px] flex flex-col p-4 mt-6 overflow-hidden relative justify-center gap-3 shadow-inner select-none">
       {/* 3 Metric Cards */}
       <div className="grid grid-cols-3 gap-2 w-full max-w-sm mx-auto">
         <div className="bg-card border-[0.5px] border-border rounded-[6px] p-2 flex flex-col gap-0.5 text-left">
@@ -165,28 +231,66 @@ function AnalyticsVisual() {
       </div>
 
       {/* Inbox Health Distribution */}
-      <div className="bg-card border-[0.5px] border-border rounded-[6px] p-2.5 w-full max-w-sm mx-auto flex flex-col gap-2 text-left">
-        <span className="text-[7px] font-mono uppercase tracking-wider text-text-secondary">Inbox Health</span>
+      <div className="bg-card border-[0.5px] border-border rounded-[6px] p-2.5 w-full max-w-sm mx-auto flex flex-col gap-2 text-left relative">
+        <div className="flex justify-between items-center h-3">
+          <span className="text-[7px] font-mono uppercase tracking-wider text-text-secondary">Inbox Health</span>
+          <span className="text-[6.5px] font-mono text-text-tertiary truncate max-w-[170px] text-right font-light transition-all duration-200">
+            {getTooltipText()}
+          </span>
+        </div>
         
         {/* Stacked Progress Bar */}
-        <div className="h-1.5 w-full rounded-full bg-border/20 overflow-hidden flex">
-          <div className="h-full bg-fresh-high" style={{ width: "60%" }} />
-          <div className="h-full bg-fresh-mid" style={{ width: "25%" }} />
-          <div className="h-full bg-fresh-low" style={{ width: "15%" }} />
+        <div className="h-2 w-full rounded-full bg-border/20 overflow-hidden flex cursor-pointer">
+          <div 
+            onMouseEnter={() => setHoveredSegment("fresh")}
+            onMouseLeave={() => setHoveredSegment(null)}
+            className={`h-full bg-fresh-high transition-all duration-200 ${
+              hoveredSegment === "fresh" ? "brightness-110 scale-y-110" : hoveredSegment !== null ? "opacity-40" : ""
+            }`}
+            style={{ width: "60%" }} 
+          />
+          <div 
+            onMouseEnter={() => setHoveredSegment("fading")}
+            onMouseLeave={() => setHoveredSegment(null)}
+            className={`h-full bg-fresh-mid transition-all duration-200 ${
+              hoveredSegment === "fading" ? "brightness-110 scale-y-110" : hoveredSegment !== null ? "opacity-40" : ""
+            }`} 
+            style={{ width: "25%" }} 
+          />
+          <div 
+            onMouseEnter={() => setHoveredSegment("stale")}
+            onMouseLeave={() => setHoveredSegment(null)}
+            className={`h-full bg-fresh-low transition-all duration-200 ${
+              hoveredSegment === "stale" ? "brightness-110 scale-y-110" : hoveredSegment !== null ? "opacity-40" : ""
+            }`} 
+            style={{ width: "15%" }} 
+          />
         </div>
 
         {/* Legend */}
         <div className="flex justify-between text-[7px] font-mono text-text-secondary">
-          <div className="flex items-center gap-1">
-            <div className="w-1 h-1 rounded-full bg-fresh-high" />
+          <div 
+            onMouseEnter={() => setHoveredSegment("fresh")}
+            onMouseLeave={() => setHoveredSegment(null)}
+            className={`flex items-center gap-1 transition-opacity duration-200 ${hoveredSegment !== null && hoveredSegment !== "fresh" ? "opacity-40" : ""}`}
+          >
+            <div className="w-1.5 h-1.5 rounded-full bg-fresh-high" />
             <span>Fresh (11)</span>
           </div>
-          <div className="flex items-center gap-1">
-            <div className="w-1 h-1 rounded-full bg-fresh-mid" />
+          <div 
+            onMouseEnter={() => setHoveredSegment("fading")}
+            onMouseLeave={() => setHoveredSegment(null)}
+            className={`flex items-center gap-1 transition-opacity duration-200 ${hoveredSegment !== null && hoveredSegment !== "fading" ? "opacity-40" : ""}`}
+          >
+            <div className="w-1.5 h-1.5 rounded-full bg-fresh-mid" />
             <span>Fading (5)</span>
           </div>
-          <div className="flex items-center gap-1">
-            <div className="w-1 h-1 rounded-full bg-fresh-low" />
+          <div 
+            onMouseEnter={() => setHoveredSegment("stale")}
+            onMouseLeave={() => setHoveredSegment(null)}
+            className={`flex items-center gap-1 transition-opacity duration-200 ${hoveredSegment !== null && hoveredSegment !== "stale" ? "opacity-40" : ""}`}
+          >
+            <div className="w-1.5 h-1.5 rounded-full bg-fresh-low" />
             <span>Stale (2)</span>
           </div>
         </div>
@@ -197,12 +301,46 @@ function AnalyticsVisual() {
 
 // ─── 4. Extension Workflow Visual ───────────────────────────────────────────
 function ExtensionVisual() {
+  const [saveTriggered, setSaveTriggered] = useState(false);
+  const [animating, setAnimating] = useState(false);
+
+  const triggerSave = () => {
+    if (animating) return;
+    setAnimating(true);
+    setSaveTriggered(true);
+
+    // Fade toast out after 3 seconds
+    setTimeout(() => {
+      setSaveTriggered(false);
+      // Wait for exit transition
+      setTimeout(() => {
+        setAnimating(false);
+      }, 500);
+    }, 3000);
+  };
+
+  // Run automatically once on mount
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAnimating(true);
+      setSaveTriggered(true);
+
+      setTimeout(() => {
+        setSaveTriggered(false);
+        setTimeout(() => {
+          setAnimating(false);
+        }, 500);
+      }, 3000);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="h-44 w-full bg-surface border-[0.5px] border-border rounded-[8px] flex flex-col justify-center items-center p-4 mt-6 overflow-hidden relative shadow-inner">
       {/* Mock Browser Window */}
       <div className="w-full max-w-[250px] sm:max-w-xs bg-card border-[0.5px] border-border rounded-[6px] overflow-hidden shadow-lg flex flex-col">
         {/* Address bar */}
-        <div className="bg-surface h-5 border-b border-border flex items-center px-2 gap-2 justify-between">
+        <div className="bg-surface h-5 border-b border-border flex items-center px-2 gap-2 justify-between select-none">
           <div className="flex gap-0.5">
             <div className="w-1 h-1 rounded-full bg-fresh-low/30" />
             <div className="w-1 h-1 rounded-full bg-fresh-mid/30" />
@@ -211,35 +349,52 @@ function ExtensionVisual() {
           <div className="bg-card w-32 sm:w-40 h-3.5 rounded-[3px] border-[0.5px] border-border flex items-center px-1.5 justify-start">
             <span className="text-[5.5px] text-text-tertiary truncate">news.ycombinator.com/item?id=405...</span>
           </div>
-          <div className="w-2.5 h-2.5 rounded-[2px] bg-fresh-high/10 border-[0.5px] border-fresh-high/30 flex items-center justify-center">
-            <div className="w-1 h-1 rounded-full bg-fresh-high" />
-          </div>
+          <button 
+            onClick={triggerSave}
+            className={`w-3 h-3 rounded-[2px] flex items-center justify-center transition-all ${
+              saveTriggered 
+                ? "bg-fresh-high text-background" 
+                : "bg-fresh-high/10 border-[0.5px] border-fresh-high/30 text-fresh-high hover:bg-fresh-high/20 cursor-pointer"
+            }`}
+            title="Save Page"
+          >
+            <div className={`w-1 h-1 rounded-full ${saveTriggered ? "bg-background" : "bg-fresh-high"}`} />
+          </button>
         </div>
 
         {/* Browser Page Body */}
         <div className="h-16 bg-surface p-2 flex flex-col gap-1 justify-center relative">
-          {/* Key shortcut overlay */}
-          <div className="absolute top-1 right-2 bg-card border-[0.5px] border-border rounded-[3px] px-1 py-0.5 flex gap-0.5 text-[5px] font-mono text-text-secondary">
+          {/* Key shortcut overlay trigger */}
+          <button 
+            onClick={triggerSave}
+            className="absolute top-1 right-2 bg-card border-[0.5px] border-border hover:border-text-secondary/40 active:bg-surface rounded-[3px] px-1.5 py-0.5 flex gap-0.5 text-[5px] font-mono text-text-secondary cursor-pointer transition-all hover:text-text-primary"
+            title="Press to trigger capture"
+          >
             <span>⌘</span><span>Shift</span><span>L</span>
-          </div>
+          </button>
 
           {/* Saved Toast slide-in animation */}
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ 
-              delay: 0.5, 
-              duration: 0.6, 
-              repeat: Infinity, 
-              repeatType: "reverse", 
-              repeatDelay: 2.5 
-            }}
-            className="w-40 sm:w-48 bg-card border-[0.5px] border-border rounded-[4px] p-1.5 flex flex-col gap-0.5 relative overflow-hidden self-center shadow-lg text-left"
-          >
-            <div className="absolute left-0 top-0 bottom-0 w-[1.5px] bg-fresh-high" />
-            <span className="text-[6px] text-text-primary font-semibold truncate pl-1">✓ Saved to LinkShelf</span>
-            <span className="text-[5px] text-text-secondary truncate pl-1">ycombinator.com &middot; just now &middot; 4 min read</span>
-          </motion.div>
+          <AnimatePresence>
+            {saveTriggered && (
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 15, opacity: 0 }}
+                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                className="w-40 sm:w-48 bg-card border-[0.5px] border-border rounded-[4px] p-1.5 flex flex-col gap-0.5 relative overflow-hidden self-center shadow-lg text-left select-none"
+              >
+                <div className="absolute left-0 top-0 bottom-0 w-[1.5px] bg-fresh-high" />
+                <span className="text-[6px] text-text-primary font-semibold truncate pl-1">✓ Saved to LinkShelf</span>
+                <span className="text-[5px] text-text-secondary truncate pl-1">ycombinator.com &middot; just now &middot; 4 min read</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+          
+          {!saveTriggered && (
+            <span className="text-[6px] text-text-tertiary text-center font-mono animate-pulse">
+              Click shortcut key to trigger save
+            </span>
+          )}
         </div>
       </div>
     </div>

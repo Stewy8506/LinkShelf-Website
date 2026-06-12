@@ -1,3 +1,7 @@
+"use client";
+
+import { useState } from "react";
+import { AnimatePresence } from "framer-motion";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { AtmosphereCanvas } from "@/components/AtmosphereCanvas";
 import { Header } from "@/components/Header";
@@ -8,23 +12,34 @@ import { Features } from "@/components/sections/Features";
 import { Architecture } from "@/components/sections/Architecture";
 import { Download } from "@/components/sections/Download";
 import { Footer } from "@/components/sections/Footer";
+import { Loader } from "@/components/Loader";
 
 export default function Home() {
+  const [loading, setLoading] = useState(true);
+
   return (
-    <SmoothScroll>
-      <AtmosphereCanvas />
-      <Header />
-      
-      <main className="relative z-10 w-full">
-        <Hero />
-        <Philosophy />
-        <FreshnessEngine />
-        <Features />
-        <Architecture />
-        <Download />
-        <Footer />
-      </main>
-    </SmoothScroll>
+    <>
+      <AnimatePresence mode="wait">
+        {loading && <Loader onComplete={() => setLoading(false)} />}
+      </AnimatePresence>
+
+      {!loading && (
+        <SmoothScroll>
+          <AtmosphereCanvas />
+          <Header />
+          
+          <main className="relative z-10 w-full">
+            <Hero />
+            <Philosophy />
+            <FreshnessEngine />
+            <Features />
+            <Architecture />
+            <Download />
+            <Footer />
+          </main>
+        </SmoothScroll>
+      )}
+    </>
   );
 }
 

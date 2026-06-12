@@ -57,6 +57,33 @@ interface GitHubRelease {
 export function Download() {
   const [activePlatform, setActivePlatform] = useState("macos");
   const [copied, setCopied] = useState(false);
+  const [cliText, setCliText] = useState("");
+  const [isTyping, setIsTyping] = useState(true);
+
+  useEffect(() => {
+    const cmd = `cat changelog_${activePlatform}.log`;
+    
+    let currentText = "";
+    let i = 0;
+    
+    const interval = setInterval(() => {
+      if (i < cmd.length) {
+        currentText += cmd[i];
+        setCliText(currentText);
+        i++;
+      } else {
+        clearInterval(interval);
+        setTimeout(() => {
+          setIsTyping(false);
+        }, 120);
+      }
+    }, 15);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [activePlatform]);
+
   const [dynamicRelease, setDynamicRelease] = useState<{
     version: string;
     date: string;
@@ -225,7 +252,7 @@ export function Download() {
 
       {/* Unified Software Distribution Window Dashboard */}
       <div className="w-full bg-card border-[0.5px] border-border rounded-[16px] overflow-hidden flex flex-col shadow-2xl">
-        
+
         {/* Widescreen OS Window Header Bar */}
         <div className="h-12 bg-surface border-b border-border flex items-center justify-between px-4 select-none shrink-0">
           {/* OS window circles */}
@@ -234,12 +261,12 @@ export function Download() {
             <div className="w-3 h-3 rounded-full bg-fresh-mid/30 border border-fresh-mid/40" />
             <div className="w-3 h-3 rounded-full bg-fresh-high/30 border border-fresh-high/40" />
           </div>
-          
+
           {/* Mock Console title */}
           <div className="font-mono text-[10px] tracking-wider text-text-tertiary uppercase">
             linkshelf-distribution-panel.sh
           </div>
-          
+
           {/* Status Dot */}
           <div className="flex items-center gap-1.5 text-[9px] font-mono tracking-wider text-fresh-high uppercase">
             <span className="relative flex h-1.5 w-1.5">
@@ -252,7 +279,7 @@ export function Download() {
 
         {/* Dashboard Grid Container */}
         <div className="flex flex-col lg:flex-row min-h-[480px]">
-          
+
           {/* 1. Left Sidebar Navigation Column */}
           <div className="flex flex-row lg:flex-col overflow-x-auto lg:overflow-x-visible border-b lg:border-b-0 lg:border-r border-border p-3 lg:p-4 gap-1 lg:gap-2 bg-surface/50 w-full lg:w-[200px] shrink-0 scrollbar-none">
             <div className="hidden lg:block font-mono text-[9px] uppercase tracking-widest text-text-tertiary px-3 mb-2">
@@ -262,14 +289,15 @@ export function Download() {
               <button
                 key={platform.id}
                 onClick={() => {
+                  setIsTyping(true);
+                  setCliText("");
                   setActivePlatform(platform.id);
                   setCopied(false);
                 }}
-                className={`relative px-4 py-2.5 rounded-lg text-xs font-mono uppercase tracking-wider transition-all cursor-pointer select-none flex items-center gap-2.5 shrink-0 lg:w-full text-left ${
-                  activePlatform === platform.id
+                className={`relative px-4 py-2.5 rounded-lg text-xs font-mono uppercase tracking-wider transition-all cursor-pointer select-none flex items-center gap-2.5 shrink-0 lg:w-full text-left ${activePlatform === platform.id
                     ? "text-text-primary font-medium"
                     : "text-text-secondary hover:text-text-primary hover:bg-card/30"
-                }`}
+                  }`}
               >
                 {activePlatform === platform.id && (
                   <motion.div
@@ -357,11 +385,10 @@ export function Download() {
                           <div key={idx} className="relative group/tooltip inline-block">
                             <button
                               disabled
-                              className={`px-6 py-3 rounded-full text-xs font-semibold tracking-wide flex items-center gap-2 cursor-not-allowed transition-all ${
-                                act.primary
+                              className={`px-6 py-3 rounded-full text-xs font-semibold tracking-wide flex items-center gap-2 cursor-not-allowed transition-all ${act.primary
                                   ? "bg-text-primary/10 text-text-primary/30 border border-border/40"
                                   : "bg-surface border-[0.5px] border-border text-text-tertiary"
-                              }`}
+                                }`}
                             >
                               {act.primary ? <ArrowDown className="w-3.5 h-3.5 opacity-30" /> : <ExternalLink className="w-3.5 h-3.5 opacity-30" />}
                               {act.label}
@@ -377,11 +404,10 @@ export function Download() {
                         <a
                           key={idx}
                           href={act.href}
-                          className={`px-6 py-3 rounded-full text-xs font-semibold tracking-wide flex items-center gap-2 cursor-pointer transition-all ${
-                            act.primary
+                          className={`px-6 py-3 rounded-full text-xs font-semibold tracking-wide flex items-center gap-2 cursor-pointer transition-all ${act.primary
                               ? "bg-text-primary text-background hover:bg-text-primary/95 shadow-md"
                               : "bg-surface border-[0.5px] border-border text-text-secondary hover:text-text-primary hover:border-text-secondary/30"
-                          }`}
+                            }`}
                         >
                           {act.primary ? <ArrowDown className="w-3.5 h-3.5" /> : <ExternalLink className="w-3.5 h-3.5" />}
                           {act.label}
@@ -392,14 +418,18 @@ export function Download() {
 
                   {/* Cryptographic SHA-256 Hashes for Verification */}
                   {currentPlatform.sha256 && (
-                    <div className="pt-5 border-t border-border/40 flex items-center justify-between gap-4">
+                    <div
+                      onClick={() => handleCopyChecksum(currentPlatform.sha256!)}
+                      className="pt-5 border-t border-border/40 flex items-center justify-between gap-4 cursor-pointer group/sha"
+                    >
                       <div className="flex items-center gap-2 text-[10px] font-mono text-text-tertiary overflow-hidden">
                         <ShieldCheck className="w-3.5 h-3.5 text-fresh-high shrink-0" />
-                        <span className="truncate">SHA-256: {currentPlatform.sha256}</span>
+                        <span className="truncate group-hover/sha:text-text-secondary transition-colors">
+                          SHA-256: <span className="text-text-tertiary group-hover/sha:text-text-primary transition-colors select-all font-mono">{currentPlatform.sha256}</span>
+                        </span>
                       </div>
                       <button
-                        onClick={() => handleCopyChecksum(currentPlatform.sha256!)}
-                        className="p-1.5 rounded-[6px] bg-surface border-[0.5px] border-border text-text-secondary hover:text-text-primary hover:border-text-secondary/30 transition-all cursor-pointer shrink-0"
+                        className="p-1.5 rounded-[6px] bg-surface border-[0.5px] border-border text-text-secondary group-hover/sha:text-text-primary group-hover/sha:border-text-secondary/30 transition-all shrink-0 pointer-events-none"
                         title="Copy SHA-256"
                       >
                         {copied ? (
@@ -451,23 +481,34 @@ export function Download() {
                 <Terminal className="w-3.5 h-3.5" />
                 <h5 className="font-mono text-[9px] uppercase tracking-wider">Changelog</h5>
               </div>
-              <div className="space-y-2 text-[10px] font-mono text-text-secondary leading-relaxed bg-surface border-[0.5px] border-border rounded-lg p-3 overflow-hidden shadow-inner">
-                {(dynamicRelease?.changelog || [
-                  "added universal macOS build",
-                  "added chrome save shortcut",
-                  "improved indexeddb cache",
-                  "fixed hero link transforms"
-                ]).map((line, idx) => {
-                  const isImprovement = line.startsWith("improved") || line.startsWith("fixed") || line.startsWith("optimized") || line.startsWith("updated") || line.startsWith("refactored");
-                  const sign = isImprovement ? "~" : "+";
-                  const color = isImprovement ? "text-fresh-mid" : "text-fresh-high";
-                  return (
-                    <div key={idx} className="flex gap-2">
-                      <span className={`${color} font-medium`}>{sign}</span>
-                      <span className="text-text-secondary font-light">{line}</span>
-                    </div>
-                  );
-                })}
+              <div className="space-y-2 text-[10px] font-mono text-text-secondary leading-relaxed bg-surface border-[0.5px] border-border rounded-lg p-3 overflow-hidden shadow-inner min-h-[120px]">
+                {/* Simulated CLI Prompt */}
+                <div className="text-text-tertiary flex items-center gap-1.5 select-none border-b border-border/20 pb-1.5 mb-1.5">
+                  <span className="text-fresh-high">$</span>
+                  <span>{cliText}</span>
+                  {isTyping && <span className="w-1.5 h-3.5 bg-text-primary animate-pulse inline-block" />}
+                </div>
+
+                {isTyping ? (
+                  <div className="text-text-tertiary font-light italic text-[9px] py-1 select-none">fetching logs...</div>
+                ) : (
+                  (dynamicRelease?.changelog || [
+                    "added universal macOS build",
+                    "added chrome save shortcut",
+                    "improved indexeddb cache",
+                    "fixed hero link transforms"
+                  ]).map((line, idx) => {
+                    const isImprovement = line.startsWith("improved") || line.startsWith("fixed") || line.startsWith("optimized") || line.startsWith("updated") || line.startsWith("refactored");
+                    const sign = isImprovement ? "~" : "+";
+                    const color = isImprovement ? "text-fresh-mid" : "text-fresh-high";
+                    return (
+                      <div key={idx} className="flex gap-2">
+                        <span className={`${color} font-medium`}>{sign}</span>
+                        <span className="text-text-secondary font-light">{line}</span>
+                      </div>
+                    );
+                  })
+                )}
               </div>
             </div>
 
