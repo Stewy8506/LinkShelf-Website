@@ -28,7 +28,7 @@ export default function Home() {
           <AtmosphereCanvas />
           <Header />
           
-          <main className="relative z-10 w-full">
+          <main id="main-content" className="relative z-10 w-full">
             <Hero />
             <Philosophy />
             <FreshnessEngine />

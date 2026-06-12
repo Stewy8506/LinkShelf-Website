@@ -78,8 +78,18 @@ export function DecayingLink({ title, url, freshness, className, delay = 0 }: De
         borderColor: "rgba(136, 136, 134, 0.45)",
         boxShadow: "0 20px 40px -15px rgba(0,0,0,0.7)"
       }}
+      whileFocus={{ 
+        y: -6, 
+        scale: 1.02,
+        rotate: 0.5,
+        borderColor: "rgba(136, 136, 134, 0.45)",
+        boxShadow: "0 20px 40px -15px rgba(0,0,0,0.7)"
+      }}
+      role="button"
+      tabIndex={0}
       className={cn(
         "relative py-[16px] pr-[16px] pl-[19.5px] my-[5px] mx-[16px] rounded-[12px] border-[0.5px] border-border bg-card flex flex-col justify-center overflow-hidden transition-colors duration-300 group cursor-pointer",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text-primary",
         className
       )}
     >

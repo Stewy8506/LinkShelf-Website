@@ -67,7 +67,7 @@ function SyncVisual() {
             </div>
             <button 
               onClick={triggerSync}
-              className={`w-5 h-5 rounded-full border-[0.5px] flex items-center justify-center cursor-pointer transition-all duration-300 ${
+              className={`w-5 h-5 rounded-full border-[0.5px] flex items-center justify-center cursor-pointer transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text-primary ${
                 syncing 
                   ? "bg-fresh-high/10 border-fresh-high text-fresh-high animate-spin" 
                   : synced 
@@ -147,7 +147,7 @@ function SmartListsVisual() {
           <button
             key={tab.id}
             onClick={() => setFilter(tab.id as "all" | "stale" | "quick")}
-            className={`px-2.5 py-1 text-[9px] font-mono uppercase tracking-wider rounded-[4px] border-[0.5px] transition-all duration-200 cursor-pointer ${
+            className={`px-2.5 py-1 text-[9px] font-mono uppercase tracking-wider rounded-[4px] border-[0.5px] transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text-primary ${
               filter === tab.id
                 ? "bg-text-primary text-background border-text-primary font-medium"
                 : "bg-card text-text-secondary border-border hover:text-text-primary"
@@ -367,7 +367,7 @@ function ExtensionVisual() {
           {/* Key shortcut overlay trigger */}
           <button 
             onClick={triggerSave}
-            className="absolute top-1 right-2 bg-card border-[0.5px] border-border hover:border-text-secondary/40 active:bg-surface rounded-[3px] px-1.5 py-0.5 flex gap-0.5 text-[5px] font-mono text-text-secondary cursor-pointer transition-all hover:text-text-primary"
+            className="absolute top-1 right-2 bg-card border-[0.5px] border-border hover:border-text-secondary/40 active:bg-surface rounded-[3px] px-1.5 py-0.5 flex gap-0.5 text-[5px] font-mono text-text-secondary cursor-pointer transition-all hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text-primary"
             title="Press to trigger capture"
           >
             <span>⌘</span><span>Shift</span><span>L</span>
@@ -436,7 +436,7 @@ export function Features() {
         <h2 className="text-3xl md:text-5xl font-semibold tracking-tight text-text-primary">Engineered for focus.</h2>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+      <div className="flex overflow-x-auto md:grid md:grid-cols-2 gap-6 md:gap-8 pb-8 md:pb-0 snap-x snap-mandatory scrollbar-none -mx-6 px-6 md:mx-0 md:px-0">
         {features.map((feature, i) => (
           <motion.div
             key={i}
@@ -444,7 +444,7 @@ export function Features() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.8, delay: i * 0.1, ease: "easeOut" }}
-            className="p-6 md:p-8 rounded-[12px] bg-card border-[0.5px] border-border hover:border-text-secondary/30 transition-all duration-300 group hover:-translate-y-1 flex flex-col justify-between"
+            className="p-6 md:p-8 rounded-[12px] bg-card border-[0.5px] border-border hover:border-text-secondary/30 transition-all duration-300 group hover:-translate-y-1 flex flex-col justify-between min-w-[85vw] md:min-w-0 snap-center shrink-0"
           >
             <div>
               <div className="mb-4 md:mb-6 inline-flex p-3 rounded-[8px] bg-surface border-[0.5px] border-border text-text-secondary group-hover:text-text-primary group-hover:border-text-secondary/30 transition-all duration-300">

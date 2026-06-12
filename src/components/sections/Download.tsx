@@ -420,7 +420,16 @@ export function Download() {
                   {currentPlatform.sha256 && (
                     <div
                       onClick={() => handleCopyChecksum(currentPlatform.sha256!)}
-                      className="pt-5 border-t border-border/40 flex items-center justify-between gap-4 cursor-pointer group/sha"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          handleCopyChecksum(currentPlatform.sha256!);
+                        }
+                      }}
+                      role="button"
+                      tabIndex={0}
+                      aria-label="Copy SHA-256 Checksum"
+                      className="pt-5 border-t border-border/40 flex items-center justify-between gap-4 cursor-pointer group/sha focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text-primary rounded outline-offset-4"
                     >
                       <div className="flex items-center gap-2 text-[10px] font-mono text-text-tertiary overflow-hidden">
                         <ShieldCheck className="w-3.5 h-3.5 text-fresh-high shrink-0" />
@@ -481,7 +490,7 @@ export function Download() {
                 <Terminal className="w-3.5 h-3.5" />
                 <h5 className="font-mono text-[9px] uppercase tracking-wider">Changelog</h5>
               </div>
-              <div className="space-y-2 text-[10px] font-mono text-text-secondary leading-relaxed bg-surface border-[0.5px] border-border rounded-lg p-3 overflow-hidden shadow-inner min-h-[120px]">
+              <div aria-live="polite" className="space-y-2 text-[10px] font-mono text-text-secondary leading-relaxed bg-surface border-[0.5px] border-border rounded-lg p-3 overflow-hidden shadow-inner min-h-[120px]">
                 {/* Simulated CLI Prompt */}
                 <div className="text-text-tertiary flex items-center gap-1.5 select-none border-b border-border/20 pb-1.5 mb-1.5">
                   <span className="text-fresh-high">$</span>
