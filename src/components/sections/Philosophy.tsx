@@ -4,8 +4,8 @@ import { motion } from "framer-motion";
 
 export function Philosophy() {
   return (
-    <section className="relative py-32 px-6 md:px-12 max-w-5xl mx-auto z-10">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24 items-center">
+    <section className="relative py-20 md:py-32 px-6 md:px-12 max-w-5xl mx-auto z-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -15,10 +15,10 @@ export function Philosophy() {
           <h2 className="text-3xl md:text-5xl font-semibold tracking-tight mb-6 text-text-primary">
             Most read-later apps become infinite graveyards.
           </h2>
-          <p className="text-text-secondary text-lg leading-relaxed mb-6 font-light">
+          <p className="text-text-secondary text-base md:text-lg leading-relaxed mb-6 font-light">
             {"You save a link. You tell yourself you'll read it this weekend. The weekend passes. The link gets buried under 50 other \"must-reads\"."}
           </p>
-          <p className="text-text-secondary text-lg leading-relaxed font-light">
+          <p className="text-text-secondary text-base md:text-lg leading-relaxed font-light">
             {"Without friction or consequence, your reading list is just another source of digital backlog anxiety."}
           </p>
         </motion.div>
@@ -28,10 +28,10 @@ export function Philosophy() {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
-          className="border-[0.5px] border-border p-8 md:p-12 rounded-[16px] bg-card relative overflow-hidden shadow-xl"
+          className="border-[0.5px] border-border p-6 md:p-10 rounded-[16px] bg-card relative overflow-hidden shadow-xl"
         >
           <h3 className="text-xl md:text-2xl font-semibold mb-4 text-fresh-high">The Friction Engine</h3>
-          <p className="text-text-secondary leading-relaxed font-light mb-8">
+          <p className="text-text-secondary text-sm md:text-base leading-relaxed font-light mb-8">
             {"LinkShelf introduces psychological friction through exponential decay. Fresh links feel alive and actionable. Ignored links visually rot and resurface, demanding a decision: read it, or let it die."}
           </p>
           <ul className="space-y-4">
@@ -52,3 +52,4 @@ export function Philosophy() {
     </section>
   );
 }
+

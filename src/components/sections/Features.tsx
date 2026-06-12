@@ -15,9 +15,9 @@ function SyncVisual() {
         backgroundSize: '16px 16px'
       }} />
 
-      <div className="flex items-center gap-4 z-10 w-full justify-around max-w-sm">
+      <div className="flex items-center gap-2 sm:gap-4 z-10 w-full justify-around max-w-sm">
         {/* Desktop Screen mockup */}
-        <div className="w-28 bg-card border-[0.5px] border-border rounded-[6px] p-2 flex flex-col gap-1.5 shadow-lg">
+        <div className="w-24 sm:w-28 bg-card border-[0.5px] border-border rounded-[6px] p-2 flex flex-col gap-1.5 shadow-lg">
           <div className="flex gap-1">
             <div className="w-1 h-1 rounded-full bg-fresh-low/60" />
             <div className="w-1 h-1 rounded-full bg-fresh-mid/60" />
@@ -25,25 +25,25 @@ function SyncVisual() {
           </div>
           <div className="h-7 w-full bg-surface rounded-[4px] border-[0.5px] border-border flex items-center px-1.5 justify-between relative overflow-hidden">
             <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-fresh-high" />
-            <span className="text-[7.5px] text-text-primary truncate font-medium max-w-[50px]">React 19 internals</span>
+            <span className="text-[7.5px] text-text-primary truncate font-medium max-w-[40px] sm:max-w-[50px]">React 19 internals</span>
             <span className="text-[6px] text-text-secondary font-mono">92%</span>
           </div>
         </div>
 
         {/* Sync Indicator */}
         <div className="flex flex-col items-center gap-1.5 relative">
-          <div className="flex gap-1.5 items-center">
-            <div className="h-0.5 w-6 bg-border relative overflow-hidden">
+          <div className="flex gap-1 sm:gap-1.5 items-center">
+            <div className="h-0.5 w-4 sm:w-6 bg-border relative overflow-hidden">
               <motion.div 
                 animate={{ x: ["-100%", "100%"] }}
                 transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
                 className="absolute inset-y-0 left-0 w-2.5 bg-fresh-high"
               />
             </div>
-            <div className="w-2.5 h-2.5 rounded-full bg-fresh-high/20 border-[0.5px] border-fresh-high flex items-center justify-center">
-              <div className="w-1 h-1 rounded-full bg-fresh-high animate-ping" />
+            <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-fresh-high/20 border-[0.5px] border-fresh-high flex items-center justify-center">
+              <div className="w-0.5 h-0.5 sm:w-1 sm:h-1 rounded-full bg-fresh-high animate-ping" />
             </div>
-            <div className="h-0.5 w-6 bg-border relative overflow-hidden">
+            <div className="h-0.5 w-4 sm:w-6 bg-border relative overflow-hidden">
               <motion.div 
                 animate={{ x: ["-100%", "100%"] }}
                 transition={{ repeat: Infinity, duration: 1.5, ease: "linear", delay: 0.75 }}
@@ -51,16 +51,16 @@ function SyncVisual() {
               />
             </div>
           </div>
-          <span className="text-[8px] font-mono tracking-widest text-fresh-high uppercase animate-pulse">Syncing</span>
+          <span className="text-[7px] sm:text-[8px] font-mono tracking-widest text-fresh-high uppercase animate-pulse">Syncing</span>
         </div>
 
         {/* Mobile Screen mockup */}
-        <div className="w-[64px] h-20 bg-card border-[0.5px] border-border rounded-[8px] p-2 flex flex-col gap-1.5 shadow-lg relative">
-          <div className="w-8 h-1 bg-border rounded-full mx-auto" />
-          <div className="h-7 w-full bg-surface rounded-[4px] border-[0.5px] border-border flex flex-col justify-center px-1.5 relative overflow-hidden mt-1.5">
+        <div className="w-[52px] sm:w-[64px] h-[72px] sm:h-20 bg-card border-[0.5px] border-border rounded-[8px] p-1.5 sm:p-2 flex flex-col gap-1 sm:gap-1.5 shadow-lg relative">
+          <div className="w-6 sm:w-8 h-0.5 sm:h-1 bg-border rounded-full mx-auto" />
+          <div className="h-7 w-full bg-surface rounded-[4px] border-[0.5px] border-border flex flex-col justify-center px-1 sm:px-1.5 relative overflow-hidden mt-1 sm:mt-1.5">
             <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-fresh-high" />
-            <span className="text-[6.5px] text-text-primary truncate font-medium">React 19 internals</span>
-            <span className="text-[5.5px] text-text-secondary mt-0.5 font-sans">react.dev</span>
+            <span className="text-[6px] sm:text-[6.5px] text-text-primary truncate font-medium">React 19 internals</span>
+            <span className="text-[5px] sm:text-[5.5px] text-text-secondary mt-0.5 font-sans">react.dev</span>
           </div>
         </div>
       </div>
@@ -200,7 +200,7 @@ function ExtensionVisual() {
   return (
     <div className="h-44 w-full bg-surface border-[0.5px] border-border rounded-[8px] flex flex-col justify-center items-center p-4 mt-6 overflow-hidden relative shadow-inner">
       {/* Mock Browser Window */}
-      <div className="w-full max-w-xs bg-card border-[0.5px] border-border rounded-[6px] overflow-hidden shadow-lg flex flex-col">
+      <div className="w-full max-w-[250px] sm:max-w-xs bg-card border-[0.5px] border-border rounded-[6px] overflow-hidden shadow-lg flex flex-col">
         {/* Address bar */}
         <div className="bg-surface h-5 border-b border-border flex items-center px-2 gap-2 justify-between">
           <div className="flex gap-0.5">
@@ -208,7 +208,7 @@ function ExtensionVisual() {
             <div className="w-1 h-1 rounded-full bg-fresh-mid/30" />
             <div className="w-1 h-1 rounded-full bg-fresh-high/30" />
           </div>
-          <div className="bg-card w-40 h-3.5 rounded-[3px] border-[0.5px] border-border flex items-center px-1.5 justify-start">
+          <div className="bg-card w-32 sm:w-40 h-3.5 rounded-[3px] border-[0.5px] border-border flex items-center px-1.5 justify-start">
             <span className="text-[5.5px] text-text-tertiary truncate">news.ycombinator.com/item?id=405...</span>
           </div>
           <div className="w-2.5 h-2.5 rounded-[2px] bg-fresh-high/10 border-[0.5px] border-fresh-high/30 flex items-center justify-center">
@@ -234,7 +234,7 @@ function ExtensionVisual() {
               repeatType: "reverse", 
               repeatDelay: 2.5 
             }}
-            className="w-48 bg-card border-[0.5px] border-border rounded-[4px] p-1.5 flex flex-col gap-0.5 relative overflow-hidden self-center shadow-lg text-left"
+            className="w-40 sm:w-48 bg-card border-[0.5px] border-border rounded-[4px] p-1.5 flex flex-col gap-0.5 relative overflow-hidden self-center shadow-lg text-left"
           >
             <div className="absolute left-0 top-0 bottom-0 w-[1.5px] bg-fresh-high" />
             <span className="text-[6px] text-text-primary font-semibold truncate pl-1">✓ Saved to LinkShelf</span>
@@ -276,12 +276,12 @@ const features = [
 
 export function Features() {
   return (
-    <section className="relative py-32 px-6 md:px-12 max-w-6xl mx-auto z-10 bg-background">
-      <div className="text-center mb-24">
+    <section className="relative py-20 md:py-32 px-6 md:px-12 max-w-6xl mx-auto z-10 bg-background">
+      <div className="text-center mb-16 md:mb-24">
         <h2 className="text-3xl md:text-5xl font-semibold tracking-tight text-text-primary">Engineered for focus.</h2>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
         {features.map((feature, i) => (
           <motion.div
             key={i}
@@ -289,14 +289,14 @@ export function Features() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.8, delay: i * 0.1, ease: "easeOut" }}
-            className="p-8 rounded-[12px] bg-card border-[0.5px] border-border hover:border-text-secondary/30 transition-all duration-300 group hover:-translate-y-1 flex flex-col justify-between"
+            className="p-6 md:p-8 rounded-[12px] bg-card border-[0.5px] border-border hover:border-text-secondary/30 transition-all duration-300 group hover:-translate-y-1 flex flex-col justify-between"
           >
             <div>
-              <div className="mb-6 inline-flex p-3 rounded-[8px] bg-surface border-[0.5px] border-border text-text-secondary group-hover:text-text-primary group-hover:border-text-secondary/30 transition-all duration-300">
+              <div className="mb-4 md:mb-6 inline-flex p-3 rounded-[8px] bg-surface border-[0.5px] border-border text-text-secondary group-hover:text-text-primary group-hover:border-text-secondary/30 transition-all duration-300">
                 {feature.icon}
               </div>
-              <h3 className="text-xl font-medium mb-4 text-text-primary">{feature.title}</h3>
-              <p className="text-text-secondary font-light leading-relaxed text-sm">
+              <h3 className="text-lg md:text-xl font-medium mb-3 md:mb-4 text-text-primary">{feature.title}</h3>
+              <p className="text-text-secondary font-light leading-relaxed text-xs md:text-sm">
                 {feature.description}
               </p>
             </div>

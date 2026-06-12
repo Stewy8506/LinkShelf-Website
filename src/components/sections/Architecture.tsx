@@ -4,8 +4,8 @@ import { motion } from "framer-motion";
 
 export function Architecture() {
   return (
-    <section className="relative py-32 px-6 md:px-12 max-w-5xl mx-auto z-10 border-t border-border">
-      <div className="flex flex-col md:flex-row gap-16 md:gap-24 items-center">
+    <section className="relative py-20 md:py-32 px-6 md:px-12 max-w-5xl mx-auto z-10 border-t border-border">
+      <div className="flex flex-col md:flex-row gap-12 md:gap-20 items-center">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
@@ -42,10 +42,10 @@ export function Architecture() {
           transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
           className="w-full md:w-1/2"
         >
-          <h2 className="text-3xl font-semibold tracking-tight mb-6 text-text-primary">
+          <h2 className="text-2xl md:text-3xl font-semibold tracking-tight mb-6 text-text-primary">
             Carefully engineered software.
           </h2>
-          <p className="text-text-secondary text-lg leading-relaxed font-light mb-8">
+          <p className="text-text-secondary text-base md:text-lg leading-relaxed font-light mb-8">
             LinkShelf is built with a sophisticated sync engine leveraging Firebase Cloud Firestore for real-time state resolution, ensuring your freshness scores are consistent across all your devices down to the millisecond.
           </p>
           <div className="space-y-6">
@@ -63,3 +63,4 @@ export function Architecture() {
     </section>
   );
 }
+

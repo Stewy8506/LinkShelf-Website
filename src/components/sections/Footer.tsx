@@ -5,8 +5,8 @@ import { ArrowUpRight } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="relative py-24 px-6 md:px-12 z-10 bg-background border-t border-foreground/10 mt-32">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between gap-16">
+    <footer className="relative py-16 md:py-24 px-6 md:px-12 z-10 bg-background border-t border-foreground/10 mt-20 md:mt-32">
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between gap-12 md:gap-16">
         <div className="max-w-sm">
           <h2 className="text-2xl font-medium tracking-tight mb-4 flex items-center gap-2">
             LinkShelf
@@ -18,7 +18,7 @@ export function Footer() {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="px-6 py-3 bg-foreground text-background rounded-full font-medium text-sm hover:bg-foreground/90 transition-colors"
+            className="px-6 py-3 bg-foreground text-background rounded-full font-medium text-sm hover:bg-foreground/90 transition-colors cursor-pointer"
           >
             Download for macOS
           </motion.button>
@@ -27,7 +27,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-12 md:gap-24">
+        <div className="grid grid-cols-2 gap-8 md:gap-24">
           <div>
             <h4 className="font-mono text-xs uppercase tracking-widest text-foreground/40 mb-6">Product</h4>
             <ul className="space-y-4">
@@ -59,3 +59,4 @@ export function Footer() {
     </footer>
   );
 }
+
