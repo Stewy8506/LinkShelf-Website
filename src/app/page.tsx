@@ -1,5 +1,6 @@
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { AtmosphereCanvas } from "@/components/AtmosphereCanvas";
+import { Header } from "@/components/Header";
 import { Hero } from "@/components/sections/Hero";
 import { Philosophy } from "@/components/sections/Philosophy";
 import { FreshnessEngine } from "@/components/sections/FreshnessEngine";
@@ -11,6 +12,7 @@ export default function Home() {
   return (
     <SmoothScroll>
       <AtmosphereCanvas />
+      <Header />
       
       <main className="relative z-10 w-full">
         <Hero />

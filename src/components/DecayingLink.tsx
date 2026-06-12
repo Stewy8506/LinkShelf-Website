@@ -67,12 +67,13 @@ export function DecayingLink({ title, url, freshness, className, delay = 0 }: De
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.6, delay, ease: [0.16, 1, 0.3, 1] }}
+      whileHover={{ y: -4, borderColor: "rgba(136, 136, 134, 0.3)" }}
       className={cn(
-        "relative py-[16px] pr-[16px] pl-[19.5px] my-[5px] mx-[16px] rounded-[12px] border-[0.5px] border-border bg-card flex flex-col justify-center overflow-hidden transition-all duration-300 group hover:-translate-y-1 hover:border-text-secondary/30",
+        "relative py-[16px] pr-[16px] pl-[19.5px] my-[5px] mx-[16px] rounded-[12px] border-[0.5px] border-border bg-card flex flex-col justify-center overflow-hidden transition-colors duration-300 group",
         className
       )}
     >
