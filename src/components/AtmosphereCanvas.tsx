@@ -52,7 +52,7 @@ export function AtmosphereCanvas() {
   const { scrollYProgress } = useScroll();
 
   return (
-    <div className="fixed inset-0 z-[-1] pointer-events-none bg-background">
+    <div className="fixed inset-0 z-0 pointer-events-none bg-background">
       <Canvas camera={{ position: [0, 0, 15], fov: 60 }}>
         <fog attach="fog" args={["#0a0a0a", 10, 25]} />
         <ParticleCloud scrollYProgress={scrollYProgress} />

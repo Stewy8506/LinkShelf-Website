@@ -33,7 +33,7 @@ export function Philosophy() {
           <div className="absolute inset-0 bg-gradient-to-br from-fresh-high/5 to-transparent pointer-events-none" />
           <h3 className="text-xl md:text-2xl font-medium mb-4 text-fresh-high">The Friction Engine</h3>
           <p className="text-foreground/70 leading-relaxed font-light mb-8">
-            LinkShelf introduces psychological friction through exponential decay. Fresh links feel alive and actionable. Ignored links visually rot and resurface, demanding a decision: read it, or let it die.
+            {"LinkShelf introduces psychological friction through exponential decay. Fresh links feel alive and actionable. Ignored links visually rot and resurface, demanding a decision: read it, or let it die."}
           </p>
           <ul className="space-y-4">
             {["Time pressure", "Visual staleness", "Behavioral friction", "Dynamic prioritization"].map((item, i) => (
