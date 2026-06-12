@@ -97,7 +97,7 @@ export function Hero() {
           <div className="absolute top-[16%] left-[2%] 2xl:left-[6%] rotate-[-8deg] opacity-80 scale-90 2xl:scale-100 pointer-events-auto">
             <DecayingLink title="How to build an atmospheric website" url="design.engineering/atmospheric" freshness={0.92} delay={0.4} className="w-[280px] lg:w-[300px]" />
           </div>
-          <div className="absolute top-[46%] right-[2%] 2xl:right-[6%] rotate-[6deg] opacity-70 scale-90 2xl:scale-100 pointer-events-auto">
+          <div className="absolute top-[62%] right-[1%] 2xl:right-[4%] rotate-[8deg] opacity-70 scale-90 2xl:scale-100 pointer-events-auto">
             <DecayingLink title="The Psychology of Information Overload" url="behavior.io/info-overload" freshness={0.45} delay={0.6} className="w-[300px] lg:w-[320px]" />
           </div>
           <div className="absolute top-[76%] left-[1%] 2xl:left-[5%] rotate-[-4deg] opacity-50 scale-90 2xl:scale-100 pointer-events-auto">

@@ -431,7 +431,7 @@ const features = [
 
 export function Features() {
   return (
-    <section className="relative py-20 md:py-32 px-6 md:px-12 max-w-6xl mx-auto z-10 bg-background">
+    <section id="features" className="relative py-20 md:py-32 px-6 md:px-12 max-w-6xl mx-auto z-10 bg-background">
       <div className="text-center mb-16 md:mb-24">
         <h2 className="text-3xl md:text-5xl font-semibold tracking-tight text-text-primary">Engineered for focus.</h2>
       </div>

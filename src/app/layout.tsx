@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} h-full antialiased dark bg-background text-foreground`}
+      className={`${inter.variable} h-full antialiased dark bg-background text-foreground scroll-smooth`}
     >
       <body className="min-h-full flex flex-col">
         <a 

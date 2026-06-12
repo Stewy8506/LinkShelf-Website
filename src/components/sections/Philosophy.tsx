@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 export function Philosophy() {
   return (
-    <section className="relative py-20 md:py-32 px-6 md:px-12 max-w-5xl mx-auto z-10">
+    <section id="philosophy" className="relative py-20 md:py-32 px-6 md:px-12 max-w-5xl mx-auto z-10">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
         <motion.div
           initial={{ opacity: 0, x: -30 }}

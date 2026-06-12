@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 export function Architecture() {
   return (
-    <section className="relative py-20 md:py-32 px-6 md:px-12 max-w-5xl mx-auto z-10 border-t border-border">
+    <section id="architecture" className="relative py-20 md:py-32 px-6 md:px-12 max-w-5xl mx-auto z-10 border-t border-border">
       <div className="flex flex-col md:flex-row gap-12 md:gap-20 items-center">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
