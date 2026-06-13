@@ -3,7 +3,7 @@
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment, PerspectiveCamera, SoftShadows } from "@react-three/drei";
 import { EffectComposer, Bloom, N8AO } from "@react-three/postprocessing";
-import { useScroll } from "framer-motion";
+import { useScroll, motion } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import * as THREE from "three";
 import { StylizedBookshelves } from "./StylizedBookshelves";
@@ -307,6 +307,13 @@ export function BackgroundEcosystem({
       {/* Cinematic vignette for text readability */}
       <div 
         className="absolute inset-0 z-10 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(2,3,6,0)_20%,rgba(2,3,6,0.3)_60%,rgba(2,3,6,0.8)_100%)]" 
+      />
+      {/* Delayed background fade-in overlay matching the loader's background color and hero transitions */}
+      <motion.div
+        className="absolute inset-0 z-20 pointer-events-none bg-[#020306]"
+        initial={{ opacity: 1 }}
+        animate={isLoaded ? { opacity: 0 } : { opacity: 1 }}
+        transition={{ duration: 1.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
       />
     </div>
   );
