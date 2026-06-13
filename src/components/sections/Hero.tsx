@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { DecayingLink } from "../DecayingLink";
 
@@ -8,6 +9,108 @@ export function Hero() {
   const y1 = useTransform(scrollYProgress, [0, 1], [0, 200]);
   const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
   const scrollIndicatorOpacity = useTransform(scrollYProgress, [0, 0.05], [0.6, 0]);
+
+  const [platform, setPlatform] = useState("macos");
+  const [version, setVersion] = useState("v1.0.1");
+  const [downloadUrl, setDownloadUrl] = useState("https://github.com/Stewy8506/LinkShelf/releases/latest/download/linkshelf-macos.zip");
+
+  useEffect(() => {
+    // 1. Detect OS
+    if (typeof window !== "undefined") {
+      const userAgent = window.navigator.userAgent.toLowerCase();
+      if (userAgent.indexOf("win") !== -1) {
+        setPlatform("windows");
+      } else if (userAgent.indexOf("android") !== -1) {
+        setPlatform("android");
+      } else if (userAgent.indexOf("iphone") !== -1 || userAgent.indexOf("ipad") !== -1) {
+        setPlatform("ios");
+      } else if (userAgent.indexOf("linux") !== -1) {
+        setPlatform("chrome");
+      } else {
+        setPlatform("macos");
+      }
+    }
+
+    // 2. Fetch latest version from GitHub
+    fetch("https://api.github.com/repos/Stewy8506/LinkShelf/releases/latest")
+      .then((res) => {
+        if (!res.ok) throw new Error("API rate limit or error");
+        return res.json();
+      })
+      .then((data) => {
+        const tag = data.tag_name || "v1.0.1";
+        setVersion(tag);
+        
+        const assets = data.assets || [];
+        
+        // Find macOS asset URL dynamically
+        const macAsset = assets.find((a: any) => a.name === "linkshelf-macos.zip");
+        const macUrl = macAsset?.browser_download_url || `https://github.com/Stewy8506/LinkShelf/releases/download/${tag}/linkshelf-macos.zip`;
+        
+        // Find Android asset URL dynamically
+        const androidAsset = assets.find((a: any) => a.name === "app-release.aab");
+        const androidUrl = androidAsset?.browser_download_url || `https://github.com/Stewy8506/LinkShelf/releases/download/${tag}/app-release.aab`;
+
+        const extAsset = assets.find((a: any) => a.name === "linkshelf-chrome-extension.zip");
+        const extensionUrl = extAsset?.browser_download_url || `https://github.com/Stewy8506/LinkShelf/releases/download/${tag}/linkshelf-chrome-extension.zip`;
+
+        if (platform === "macos") {
+          setDownloadUrl(macUrl);
+        } else if (platform === "android") {
+          setDownloadUrl(androidUrl);
+        } else if (platform === "chrome") {
+          setDownloadUrl(extensionUrl);
+        } else {
+          setDownloadUrl("#download");
+        }
+      })
+      .catch(() => {
+        // Fallback
+      });
+  }, [platform]);
+
+  const getButtonConfig = () => {
+    switch (platform) {
+      case "windows":
+        return {
+          text: "Windows App (Coming Soon)",
+          subtext: "WinUI3",
+          href: "#download",
+          isExternal: false
+        };
+      case "ios":
+        return {
+          text: "iOS App (Coming Soon)",
+          subtext: "TestFlight",
+          href: "#download",
+          isExternal: false
+        };
+      case "android":
+        return {
+          text: "Download for Android",
+          subtext: version,
+          href: downloadUrl,
+          isExternal: true
+        };
+      case "chrome":
+        return {
+          text: "Get Chrome Extension",
+          subtext: version,
+          href: downloadUrl,
+          isExternal: true
+        };
+      case "macos":
+      default:
+        return {
+          text: "Download for macOS",
+          subtext: version,
+          href: downloadUrl,
+          isExternal: true
+        };
+    }
+  };
+
+  const buttonConfig = getButtonConfig();
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center pt-24 xs:pt-28 md:pt-36 pb-12 md:pb-24 px-4 xs:px-6 md:px-12 overflow-hidden">
@@ -23,7 +126,7 @@ export function Hero() {
             <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-fresh-high"></span>
           </span>
           <span className="text-[10px] font-mono tracking-[0.12em] text-text-secondary uppercase">
-            LinkShelf <span className="text-text-primary font-medium">v1.0.1</span>
+            LinkShelf <span className="text-text-primary font-medium">{version}</span>
           </span>
         </motion.div>
 
@@ -55,16 +158,17 @@ export function Hero() {
           className="mt-6 md:mt-10 flex flex-col sm:flex-row items-center gap-3.5 md:gap-4 z-20 w-full sm:w-auto px-4 sm:px-0"
         >
           <a
-            href="https://github.com/Stewy8506/LinkShelf/releases/latest/download/linkshelf-macos.zip"
+            href={buttonConfig.href}
             className="block sm:inline-block w-full sm:w-auto"
+            {...(buttonConfig.isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
           >
             <motion.button
               whileHover={{ scale: 1.03, y: -1 }}
               whileTap={{ scale: 0.98 }}
               className="w-full px-6 py-3.5 bg-text-primary text-background rounded-full font-semibold text-sm hover:bg-text-primary/95 transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer"
             >
-              Download for macOS
-              <span className="text-[10px] opacity-60 font-mono">v1.0.1</span>
+              {buttonConfig.text}
+              <span className="text-[10px] opacity-60 font-mono">{buttonConfig.subtext}</span>
             </motion.button>
           </a>
           
@@ -83,11 +187,13 @@ export function Hero() {
           transition={{ duration: 1, delay: 1.2 }}
           className="mt-4 flex flex-wrap justify-center items-center gap-x-6 gap-y-2 text-[10px] font-mono uppercase tracking-wider text-text-tertiary z-20 px-4"
         >
-          <span>iOS App Store</span>
+          <span>macOS Zip</span>
+          <span>&middot;</span>
+          <span>Windows App</span>
           <span>&middot;</span>
           <span>Android APK</span>
           <span>&middot;</span>
-          <span>Chrome Web Store</span>
+          <span>Chrome Extension</span>
         </motion.div>
       </div>
 

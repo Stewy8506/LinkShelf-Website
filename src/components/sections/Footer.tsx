@@ -1,66 +1,48 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
-
 export function Footer() {
   return (
-    <footer className="relative py-16 md:py-24 px-6 md:px-12 z-10 bg-transparent border-t border-foreground/10 mt-20 md:mt-32">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between gap-12 md:gap-16">
-        <div className="max-w-sm">
-          <h2 className="text-2xl font-medium tracking-tight mb-4 flex items-center gap-2">
-            LinkShelf
-            <div className="w-2 h-2 rounded-full bg-fresh-high" />
-          </h2>
-          <p className="text-foreground/50 text-sm font-light leading-relaxed mb-8">
-            Your reading list, decaying in real time. Take control of your digital backlog by letting it rot.
-          </p>
-          <a href="https://github.com/Stewy8506/LinkShelf/releases/latest/download/linkshelf-macos.zip">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-6 py-3 bg-foreground text-background rounded-full font-medium text-sm hover:bg-foreground/90 transition-colors cursor-pointer"
-            >
-              Download for macOS
-            </motion.button>
-          </a>
-          <div className="flex gap-4 mt-4 text-xs font-mono opacity-50">
-            <span>Also available for iOS, Android</span>
+    <footer className="relative py-8 md:py-12 px-6 md:px-12 z-10 bg-transparent border-t border-foreground/10 mt-16 md:mt-24">
+      <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
+        {/* Left: Brand name and tiny tagline */}
+        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
+          <div className="flex items-center gap-2 select-none">
+            <span className="font-semibold text-base tracking-tight text-text-primary">LinkShelf</span>
+            <div className="w-1.5 h-1.5 rounded-full bg-fresh-high animate-pulse" />
           </div>
+          <span className="hidden sm:inline text-text-tertiary">|</span>
+          <p className="text-foreground/50 text-xs font-light">
+            Your reading list, decaying in real time.
+          </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-8 md:gap-24">
-          <div>
-            <h4 className="font-mono text-xs uppercase tracking-widest text-foreground/40 mb-6">Product</h4>
-            <ul className="space-y-4">
-              {[
-                { name: "Downloads", href: "#download" },
-                { name: "Changelog", href: "https://github.com/Stewy8506/LinkShelf/releases" },
-                { name: "Features", href: "#features" },
-                { name: "Pricing", href: "#" }
-              ].map((item) => (
-                <li key={item.name}>
-                  <a href={item.href} className="text-sm text-foreground/70 hover:text-foreground transition-colors flex items-center gap-1 group">
-                    {item.name}
-                    <ArrowUpRight size={14} className="opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all" />
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-mono text-xs uppercase tracking-widest text-foreground/40 mb-6">Company</h4>
-            <ul className="space-y-4">
-              {["About", "Twitter", "Privacy", "Terms"].map((item) => (
-                <li key={item}>
-                  <a href="#" className="text-sm text-foreground/70 hover:text-foreground transition-colors flex items-center gap-1 group">
-                    {item}
-                    <ArrowUpRight size={14} className="opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all" />
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+        {/* Right: Quick Links */}
+        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-mono">
+          {[
+            { name: "Concept", href: "#philosophy" },
+            { name: "Features", href: "#features" },
+            { name: "Specs", href: "#architecture" },
+            { name: "Download", href: "#download" },
+            { name: "GitHub", href: "https://github.com/Stewy8506/LinkShelf", external: true }
+          ].map((item) => (
+            <a
+              key={item.name}
+              href={item.href}
+              {...(item.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+              className="text-text-secondary hover:text-text-primary transition-colors"
+            >
+              {item.name}
+            </a>
+          ))}
+        </div>
+      </div>
+
+      {/* Sub-footer for Copyright */}
+      <div className="max-w-6xl mx-auto mt-6 pt-6 border-t border-foreground/5 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] font-mono text-text-tertiary text-center sm:text-left">
+        <span>&copy; {new Date().getFullYear()} LinkShelf. All rights reserved.</span>
+        <div className="flex gap-4">
+          <a href="#" className="hover:text-text-secondary transition-colors">Privacy Policy</a>
+          <a href="#" className="hover:text-text-secondary transition-colors">Terms of Service</a>
         </div>
       </div>
     </footer>

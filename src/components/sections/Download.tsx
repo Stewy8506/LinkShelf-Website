@@ -41,6 +41,20 @@ const AndroidIcon = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
+const WindowsIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <path d="M4 5.37 10 4.5v7.26H4zM11 4.35 20 3v8.76h-9zM20 12.74V21l-9-1.35V12.74zM10 19.5 4 18.63v-5.89h6z" />
+  </svg>
+);
+
 interface GitHubAsset {
   name: string;
   size: number;
@@ -60,7 +74,28 @@ export function Download() {
   const [cliText, setCliText] = useState("");
   const [isTyping, setIsTyping] = useState(true);
 
+  // Auto-detect visitor's platform on mount
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const userAgent = window.navigator.userAgent.toLowerCase();
+      let platform = "macos";
+      if (userAgent.indexOf("win") !== -1) {
+        platform = "windows";
+      } else if (userAgent.indexOf("android") !== -1) {
+        platform = "android";
+      } else if (userAgent.indexOf("iphone") !== -1 || userAgent.indexOf("ipad") !== -1) {
+        platform = "ios";
+      } else if (userAgent.indexOf("linux") !== -1) {
+        platform = "chrome";
+      }
+      setActivePlatform(platform);
+    }
+  }, []);
+
+  useEffect(() => {
+    setIsTyping(true);
+    setCliText("");
+    
     const cmd = `cat changelog_${activePlatform}.log`;
     
     let currentText = "";
@@ -183,6 +218,21 @@ export function Download() {
         { label: "Download ZIP", href: dynamicRelease?.macUrl || `https://github.com/Stewy8506/LinkShelf/releases/download/${versionTag}/linkshelf-macos.zip`, primary: true, disabled: false },
         { label: "Mac App Store", href: "#", primary: false, disabled: true }
       ]
+    },
+    {
+      id: "windows",
+      name: "Windows",
+      icon: <WindowsIcon className="w-4 h-4" />,
+      bigIcon: <WindowsIcon className="w-12 h-12" />,
+      tagline: "Currently in active development (Native WinUI3 build coming soon)",
+      version: versionTag,
+      size: "—",
+      requirements: "Windows 10 or 11",
+      sha256: null,
+      actions: [
+        { label: "Install from Store", href: "#", primary: true, disabled: true }
+      ],
+      inDevelopment: true
     },
     {
       id: "ios",
@@ -501,16 +551,52 @@ export function Download() {
                   <span>{cliText}</span>
                   {isTyping && <span className="w-1.5 h-3.5 bg-text-primary animate-pulse inline-block" />}
                 </div>
-
-                {isTyping ? (
+                 {isTyping ? (
                   <div className="text-text-tertiary font-light italic text-[9px] py-1 select-none">fetching logs...</div>
                 ) : (
-                  (dynamicRelease?.changelog || [
-                    "added universal macOS build",
-                    "added chrome save shortcut",
-                    "improved indexeddb cache",
-                    "fixed hero link transforms"
-                  ]).map((line, idx) => {
+                  (activePlatform === "macos" && dynamicRelease?.changelog
+                    ? dynamicRelease.changelog
+                    : (() => {
+                        switch (activePlatform) {
+                          case "windows":
+                            return [
+                              "winui3 platform scaffolding established",
+                              "integrated native desktop window handles",
+                              "optimized multi-monitor dpi awareness",
+                              "msix installer package configuration"
+                            ];
+                          case "ios":
+                            return [
+                              "native swiftui shell layout design",
+                              "testflight internal build pipeline",
+                              "optimized coredata background syncing",
+                              "fixed custom widgets layout constraints"
+                            ];
+                          case "android":
+                            return [
+                              "added play store build variant",
+                              "added android app bundle packaging",
+                              "optimized sqlite database layer",
+                              "improved notification channels support"
+                            ];
+                          case "chrome":
+                            return [
+                              "added chrome quick-save shortcut",
+                              "improved manifest v3 compliance",
+                              "optimized background worker lifetime",
+                              "fixed context menu saving edge cases"
+                            ];
+                          case "macos":
+                          default:
+                            return [
+                              "added universal macOS build",
+                              "added chrome save shortcut",
+                              "improved indexeddb cache",
+                              "fixed hero link transforms"
+                            ];
+                        }
+                      })()
+                  ).map((line, idx) => {
                     const isImprovement = line.startsWith("improved") || line.startsWith("fixed") || line.startsWith("optimized") || line.startsWith("updated") || line.startsWith("refactored");
                     const sign = isImprovement ? "~" : "+";
                     const color = isImprovement ? "text-fresh-mid" : "text-fresh-high";
