@@ -118,7 +118,7 @@ function interpolateKeyframes(scroll: number) {
   };
 }
 
-function EcosystemScene() {
+function EcosystemScene({ onLoaded }: { onLoaded?: () => void }) {
   const { scrollYProgress } = useScroll();
   const groupRef = useRef<THREE.Group>(null!);
 
@@ -126,10 +126,22 @@ function EcosystemScene() {
   const keyLightRef = useRef<THREE.DirectionalLight>(null!);
   const fillLightRef = useRef<THREE.DirectionalLight>(null!);
 
-  const currentCamPos = useRef(new THREE.Vector3(0, -1.0, -17));
-  const currentCamLookAt = useRef(new THREE.Vector3(0, -1.0, -20));
+  const currentCamPos = useRef(new THREE.Vector3(3.5, -0.8, -20.0));
+  const currentCamLookAt = useRef(new THREE.Vector3(3.5, -0.8, -23.0));
+
+  const hasRendered = useRef(false);
 
   useFrame((state) => {
+    // Notify loader on first frame render
+    if (!hasRendered.current) {
+      hasRendered.current = true;
+      if (onLoaded) {
+        setTimeout(() => {
+          onLoaded();
+        }, 50);
+      }
+    }
+
     const scroll = scrollYProgress.get();
     
     // Interpolate keyframe values
@@ -247,7 +259,7 @@ function EcosystemScene() {
   );
 }
 
-export function BackgroundEcosystem() {
+export function BackgroundEcosystem({ onLoaded }: { onLoaded?: () => void }) {
   return (
     <div className="fixed inset-0 z-0 pointer-events-none" aria-hidden="true">
       <Canvas 
@@ -256,7 +268,7 @@ export function BackgroundEcosystem() {
         dpr={[1, 1.5]}
       >
         <color attach="background" args={["#020306"]} />
-        <EcosystemScene />
+        <EcosystemScene onLoaded={onLoaded} />
       </Canvas>
       {/* Cinematic vignette for text readability */}
       <div 

@@ -15,17 +15,25 @@ import { Footer } from "@/components/sections/Footer";
 import { Loader } from "@/components/Loader";
 
 export default function Home() {
+  const [canvasLoaded, setCanvasLoaded] = useState(false);
   const [loading, setLoading] = useState(true);
 
   return (
     <>
       <AnimatePresence mode="wait">
-        {loading && <Loader onComplete={() => setLoading(false)} />}
+        {loading && (
+          <Loader 
+            isCanvasReady={canvasLoaded} 
+            onComplete={() => setLoading(false)} 
+          />
+        )}
       </AnimatePresence>
+
+      {/* Render Canvas immediately so it initializes and renders behind the loader */}
+      <BackgroundEcosystem onLoaded={() => setCanvasLoaded(true)} />
 
       {!loading && (
         <SmoothScroll>
-          <BackgroundEcosystem />
           <Header />
           
           <main id="main-content" className="relative z-10 w-full">

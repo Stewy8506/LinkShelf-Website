@@ -577,6 +577,41 @@ interface StylizedBookshelvesProps {
   scrollYProgress: MotionValue<number>;
 }
 
+// Solid matte wood backing panels for the shelves (leaving window clear)
+function BookshelfBacking() {
+  const height = 9 * 1.8; // rows * shelfHeight (16.2)
+  const sideHeight = 7 * 1.8; // sideRows * shelfHeight (12.6)
+  const startY = -4.5;
+  
+  return (
+    <group>
+      {/* Back Wall Left Backing */}
+      <mesh position={[-8, startY + height / 2, -23.5]} castShadow receiveShadow>
+        <boxGeometry args={[12, height, 0.05]} />
+        <meshPhysicalMaterial color="#140D0A" roughness={0.9} metalness={0.0} />
+      </mesh>
+      
+      {/* Back Wall Right Backing */}
+      <mesh position={[8, startY + height / 2, -23.5]} castShadow receiveShadow>
+        <boxGeometry args={[12, height, 0.05]} />
+        <meshPhysicalMaterial color="#140D0A" roughness={0.9} metalness={0.0} />
+      </mesh>
+      
+      {/* Left Wall Backing (outside of X = -14) */}
+      <mesh position={[-14.45, startY + sideHeight / 2, -9.0]} castShadow receiveShadow>
+        <boxGeometry args={[0.05, sideHeight, 28.0]} />
+        <meshPhysicalMaterial color="#140D0A" roughness={0.9} metalness={0.0} />
+      </mesh>
+      
+      {/* Right Wall Backing (outside of X = 14) */}
+      <mesh position={[14.45, startY + sideHeight / 2, -9.0]} castShadow receiveShadow>
+        <boxGeometry args={[0.05, sideHeight, 28.0]} />
+        <meshPhysicalMaterial color="#140D0A" roughness={0.9} metalness={0.0} />
+      </mesh>
+    </group>
+  );
+}
+
 export function StylizedBookshelves({ scrollYProgress }: StylizedBookshelvesProps) {
   return (
     <group>
@@ -584,6 +619,7 @@ export function StylizedBookshelves({ scrollYProgress }: StylizedBookshelvesProp
       <FloorPlanks />
       <CeilingBeams />
       <ArchedWindow />
+      <BookshelfBacking />
 
       {/* Render Pillars */}
       {LIBRARY_DATA.pillars.map((p) => (

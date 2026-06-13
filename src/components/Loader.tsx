@@ -3,12 +3,16 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-export function Loader({ onComplete }: { onComplete: () => void }) {
+export function Loader({ isCanvasReady, onComplete }: { isCanvasReady: boolean; onComplete: () => void }) {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setProgress((prev) => {
+        // Hold at 95% until the 3D Canvas has loaded its first frame
+        if (prev >= 95 && !isCanvasReady) {
+          return 95;
+        }
         if (prev >= 100) {
           clearInterval(interval);
           return 100;
@@ -20,7 +24,7 @@ export function Loader({ onComplete }: { onComplete: () => void }) {
     }, 80);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [isCanvasReady]);
 
   useEffect(() => {
     if (progress === 100) {
