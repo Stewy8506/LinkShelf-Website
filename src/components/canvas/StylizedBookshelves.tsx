@@ -38,16 +38,16 @@ function createWalnutTexture(baseColor: string, grainColor: string) {
   canvas.width = 512;
   canvas.height = 512;
   const ctx = canvas.getContext("2d")!;
-  
+
   // Base wood color
   ctx.fillStyle = baseColor;
   ctx.fillRect(0, 0, 512, 512);
-  
+
   // Subtle soft horizontal grain lines
   for (let i = 0; i < 75; i++) {
     const y = Math.random() * 512;
     const thickness = Math.random() * 1.5 + 0.8;
-    
+
     ctx.beginPath();
     ctx.moveTo(0, y);
     ctx.bezierCurveTo(
@@ -60,7 +60,7 @@ function createWalnutTexture(baseColor: string, grainColor: string) {
     ctx.strokeStyle = grainColor;
     ctx.stroke();
   }
-  
+
   // Soft wood plank shading gradients
   ctx.globalAlpha = 1.0;
   for (let i = 0; i < 20; i++) {
@@ -73,7 +73,7 @@ function createWalnutTexture(baseColor: string, grainColor: string) {
     ctx.fillStyle = grad;
     ctx.fillRect(0, y, 512, h);
   }
-  
+
   const texture = new THREE.CanvasTexture(canvas);
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
@@ -86,16 +86,16 @@ function createTableWoodTexture() {
   canvas.width = 1024;
   canvas.height = 1024;
   const ctx = canvas.getContext("2d")!;
-  
+
   // Base warm walnut wood color (lighter than the dark pillars so grain shows)
   ctx.fillStyle = "#362217";
   ctx.fillRect(0, 0, 1024, 1024);
-  
+
   // High-contrast, rich wood grain lines running horizontally (along table length)
   for (let i = 0; i < 120; i++) {
     const y = Math.random() * 1024;
     const thickness = Math.random() * 2.2 + 0.8;
-    
+
     ctx.beginPath();
     ctx.moveTo(0, y);
     ctx.bezierCurveTo(
@@ -120,7 +120,7 @@ function createTableWoodTexture() {
     ctx.lineTo(1024, y);
     ctx.stroke();
   }
-  
+
   // Add some soft wood gradients/plank shading depth
   ctx.globalAlpha = 1.0;
   for (let i = 0; i < 25; i++) {
@@ -133,7 +133,7 @@ function createTableWoodTexture() {
     ctx.fillStyle = grad;
     ctx.fillRect(0, y, 1024, h);
   }
-  
+
   const texture = new THREE.CanvasTexture(canvas);
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
@@ -252,13 +252,13 @@ const LIBRARY_DATA = (() => {
         const bWidth = Math.random() * 0.12 + 0.08;
         const bHeight = Math.random() * 0.35 + 0.75;
         const bDepth = Math.random() * 0.1 + 0.6;
-        
+
         if (currentX + bWidth > xCenter + shelfWidth / 2 - 0.2) break;
 
         const isFalling = Math.random() > 0.9 && r > 2 && r < 7; // Middle shelves fall
         const color = isFalling ? DECAY_COLORS[Math.floor(Math.random() * DECAY_COLORS.length)] : BOOK_COLORS[Math.floor(Math.random() * BOOK_COLORS.length)];
         const leanRotZ = (!isFalling && Math.random() > 0.82) ? (Math.random() > 0.5 ? 0.14 : -0.14) : 0;
-        
+
         const pos: [number, number, number] = [currentX + bWidth / 2, y + bHeight / 2 + 0.05, -23.0 + (Math.random() * 0.08)];
         const rot: [number, number, number] = [0, (Math.random() - 0.5) * 0.08, leanRotZ];
         const scale: [number, number, number] = [bWidth, bHeight, bDepth];
@@ -349,7 +349,7 @@ const LIBRARY_DATA = (() => {
 
           const color = BOOK_COLORS[Math.floor(Math.random() * BOOK_COLORS.length)];
           const leanRotX = (Math.random() > 0.8) ? (Math.random() > 0.5 ? 0.12 : -0.12) : 0;
-          
+
           const pos: [number, number, number] = [
             xShelfCenter + (Math.random() - 0.5) * 0.06,
             y + bHeight / 2 + 0.05,
@@ -380,13 +380,13 @@ const LIBRARY_DATA = (() => {
 // ============================================================================
 
 // Instanced Books Renderer (Draws hundreds of books in a single draw call!)
-function InstancedBooks({ 
-  matrices, 
-  color, 
-  isPages 
-}: { 
-  matrices: THREE.Matrix4[]; 
-  color: string; 
+function InstancedBooks({
+  matrices,
+  color,
+  isPages
+}: {
+  matrices: THREE.Matrix4[];
+  color: string;
   isPages: boolean;
 }) {
   const meshRef = useRef<THREE.InstancedMesh>(null!);
@@ -408,15 +408,15 @@ function InstancedBooks({
   }, [matrices]);
 
   return (
-    <instancedMesh 
-      ref={meshRef} 
-      args={[null as unknown as THREE.BufferGeometry, null as unknown as THREE.Material, matrices.length]} 
-      castShadow 
+    <instancedMesh
+      ref={meshRef}
+      args={[null as unknown as THREE.BufferGeometry, null as unknown as THREE.Material, matrices.length]}
+      castShadow
       receiveShadow
       frustumCulled={false}
     >
       <boxGeometry />
-      <meshPhysicalMaterial 
+      <meshPhysicalMaterial
         color={color}
         roughness={isPages ? 0.9 : 0.75}
         metalness={isPages ? 0.0 : 0.05}
@@ -428,13 +428,13 @@ function InstancedBooks({
 }
 
 // Falling/Decaying Book Component (keeps individual React structure for animation)
-function FallingBook({ 
-  pos, rot, scale, coverColor, fallDelay, scrollYProgress 
-}: { 
-  pos: [number, number, number], 
-  rot: [number, number, number], 
-  scale: [number, number, number], 
-  coverColor: string, 
+function FallingBook({
+  pos, rot, scale, coverColor, fallDelay, scrollYProgress
+}: {
+  pos: [number, number, number],
+  rot: [number, number, number],
+  scale: [number, number, number],
+  coverColor: string,
   fallDelay: number,
   scrollYProgress: MotionValue<number>
 }) {
@@ -442,23 +442,38 @@ function FallingBook({
 
   useFrame(() => {
     if (!groupRef.current) return;
-    
+
     const scroll = scrollYProgress.get();
+    const restingY = -5.0 + scale[2] / 2 + 0.01; // dynamically compute bottom contact height to prevent floor clipping
+
     if (scroll > 0.30) {
       const fallStart = 0.35 + fallDelay * 0.08;
       if (scroll > fallStart) {
         const fallProgress = Math.min((scroll - fallStart) / 0.15, 1.0);
         const yDrop = Math.pow(fallProgress, 2) * 15; 
-        const xDrift = fallProgress * (fallDelay - 0.5) * 5;
-        const zDrift = fallProgress * 4;
-        
-        groupRef.current.position.set(pos[0] + xDrift, Math.max(pos[1] - yDrop, -4.8), pos[2] + zDrift);
-        
-        if (groupRef.current.position.y > -4.8) {
-           groupRef.current.rotation.set(rot[0] + fallProgress * 5, rot[1] + fallProgress * 2, rot[2] + fallProgress * 8);
+
+        // Dynamic horizontal drift vectors to scatter books across the floor planks
+        const xOffsetSeed = Math.sin(fallDelay * 23.8) * 2.2;
+        const zOffsetSeed = 4 + fallDelay * 6.5; // slide forward by 2.5 to 9 units
+
+        const xDrift = fallProgress * xOffsetSeed;
+        const zDrift = fallProgress * zOffsetSeed;
+
+        groupRef.current.position.set(pos[0] + xDrift, Math.max(pos[1] - yDrop, restingY), pos[2] + zDrift);
+
+        // Organic resting targets: slight random tilts and wide rotation distribution
+        const targetX = Math.PI / 2 + Math.cos(fallDelay * 31.4) * 0.12;
+        const targetY = Math.sin(fallDelay * 17.8) * 0.14;
+        const targetZ = rot[2] + 4.0 + fallDelay * 8.0;
+
+        if (groupRef.current.position.y > restingY) {
+          const currentX = rot[0] * (1 - fallProgress) + targetX * fallProgress + Math.sin(fallProgress * Math.PI) * 1.8;
+          const currentY = rot[1] * (1 - fallProgress) + targetY * fallProgress + Math.sin(fallProgress * Math.PI) * 1.2;
+          const currentZ = rot[2] + fallProgress * (4.0 + fallDelay * 8.0);
+          groupRef.current.rotation.set(currentX, currentY, currentZ);
         } else {
-           groupRef.current.position.y = -4.8;
-           groupRef.current.rotation.set(Math.PI / 2, 0, rot[2] + fallProgress * 8);
+          groupRef.current.position.y = restingY;
+          groupRef.current.rotation.set(targetX, targetY, targetZ);
         }
       }
     } else {
@@ -471,15 +486,15 @@ function FallingBook({
     <group ref={groupRef} position={pos} rotation={new THREE.Euler(...rot)}>
       {/* Cover Box */}
       <RoundedBox args={scale} radius={0.008} smoothness={4} receiveShadow castShadow>
-        <meshPhysicalMaterial 
-          color={coverColor} 
-          roughness={0.7} 
+        <meshPhysicalMaterial
+          color={coverColor}
+          roughness={0.7}
           metalness={0.1}
           clearcoat={0.1}
           clearcoatRoughness={0.3}
         />
       </RoundedBox>
-      
+
       {/* Page Inset */}
       <mesh position={[0, 0, -0.015]} receiveShadow>
         <boxGeometry args={[scale[0] - 0.02, scale[1] - 0.04, scale[2] - 0.02]} />
@@ -549,13 +564,13 @@ function ArchedWindow() {
         <planeGeometry args={[4.2, 8.5]} />
         <meshBasicMaterial color="#020306" />
       </mesh>
-      
+
       {/* Moon Sphere */}
       <mesh position={[0.7, 2.0, -0.2]}>
         <sphereGeometry args={[0.35, 32, 32]} />
         <meshBasicMaterial color="#E8EEF8" />
       </mesh>
-      
+
       {/* Window Frame Pillars (Left, Right, Bottom) */}
       <mesh position={[-2.0, 0, 0]} castShadow receiveShadow>
         <boxGeometry args={[0.12, 7.0, 0.2]} />
@@ -600,23 +615,23 @@ function FloorPlanks() {
   const plankWidth = 1.6;
   const plankLength = 45; // z = -28 to z = 17
   const startX = -((count - 1) * plankWidth) / 2;
-  
+
   for (let i = 0; i < count; i++) {
     const shades = ["#0E0A08", "#140F0C", "#1B1410", "#0F0B09"];
     const color = shades[i % shades.length];
-    
+
     planks.push(
-      <RoundedBox 
+      <RoundedBox
         key={`floor-plank-${i}`}
-        position={[startX + i * plankWidth, -5.01, -5.5]} 
-        args={[plankWidth - 0.02, 0.02, plankLength]} 
-        radius={0.005} 
+        position={[startX + i * plankWidth, -5.01, -5.5]}
+        args={[plankWidth - 0.02, 0.02, plankLength]}
+        radius={0.005}
         smoothness={2}
         receiveShadow
       >
-        <meshPhysicalMaterial 
-          color={color} 
-          roughness={0.75} 
+        <meshPhysicalMaterial
+          color={color}
+          roughness={0.75}
           metalness={0.05}
           clearcoat={0.35}
           clearcoatRoughness={0.4}
@@ -632,11 +647,11 @@ function CeilingBeams() {
   const beams = [];
   const spacing = 6.0;
   const beamHeight = 8.0;
-  
+
   for (let z = -24; z <= 12; z += spacing) {
     const texture = getWalnutTextureDark();
     beams.push(
-      <RoundedBox 
+      <RoundedBox
         key={`ceiling-beam-${z}`}
         position={[0, beamHeight, z]}
         args={[30.0, 0.4, 0.4]}
@@ -645,10 +660,10 @@ function CeilingBeams() {
         castShadow
         receiveShadow
       >
-        <meshPhysicalMaterial 
-          color={COLORS.woodDark} 
+        <meshPhysicalMaterial
+          color={COLORS.woodDark}
           map={texture || undefined}
-          roughness={0.8} 
+          roughness={0.8}
         />
       </RoundedBox>
     );
@@ -661,26 +676,26 @@ function BookshelfBacking({ isMobile = false }: { isMobile?: boolean }) {
   const height = 9 * 1.8;
   const sideHeight = 7 * 1.8;
   const startY = -4.5;
-  
+
   return (
     <group>
       <mesh position={[-8, startY + height / 2, -23.5]} castShadow receiveShadow>
         <boxGeometry args={[12, height, 0.05]} />
         <meshPhysicalMaterial color="#140D0A" roughness={0.9} metalness={0.0} />
       </mesh>
-      
+
       <mesh position={[8, startY + height / 2, -23.5]} castShadow receiveShadow>
         <boxGeometry args={[12, height, 0.05]} />
         <meshPhysicalMaterial color="#140D0A" roughness={0.9} metalness={0.0} />
       </mesh>
-      
+
       {!isMobile && (
         <>
           <mesh position={[-14.45, startY + sideHeight / 2, -9.0]} castShadow receiveShadow>
             <boxGeometry args={[0.05, sideHeight, 28.0]} />
             <meshPhysicalMaterial color="#140D0A" roughness={0.9} metalness={0.0} />
           </mesh>
-          
+
           <mesh position={[14.45, startY + sideHeight / 2, -9.0]} castShadow receiveShadow>
             <boxGeometry args={[0.05, sideHeight, 28.0]} />
             <meshPhysicalMaterial color="#140D0A" roughness={0.9} metalness={0.0} />
@@ -698,13 +713,13 @@ function LibraryTable() {
     <group position={[0, -5, 0]} receiveShadow castShadow>
       {/* Table Top */}
       <RoundedBox position={[0, 1.5, 0]} args={[8, 0.2, 4]} radius={0.05} smoothness={4} receiveShadow castShadow>
-        <meshPhysicalMaterial 
-          color={texture ? "#ffffff" : COLORS.tableWood} 
+        <meshPhysicalMaterial
+          color={texture ? "#ffffff" : COLORS.tableWood}
           map={texture || undefined}
-          roughness={0.4} 
-          metalness={0.05} 
-          clearcoat={0.4} 
-          clearcoatRoughness={0.18} 
+          roughness={0.4}
+          metalness={0.05}
+          clearcoat={0.4}
+          clearcoatRoughness={0.18}
         />
       </RoundedBox>
       {/* Legs */}
@@ -733,37 +748,37 @@ function BankersLamp() {
         <cylinderGeometry args={[0.09, 0.09, 0.03, 16]} />
         <meshPhysicalMaterial color="#CBB070" metalness={0.85} roughness={0.25} />
       </mesh>
-      
+
       {/* Brass stand column */}
       <mesh position={[0, 0.22, 0]} castShadow>
         <cylinderGeometry args={[0.015, 0.015, 0.4, 8]} />
         <meshPhysicalMaterial color="#CBB070" metalness={0.85} roughness={0.25} />
       </mesh>
-      
+
       {/* Brass horizontal support bar */}
       <mesh position={[0.045, 0.42, 0]} rotation={[0, 0, Math.PI / 2]} castShadow>
         <cylinderGeometry args={[0.012, 0.012, 0.1, 8]} />
         <meshPhysicalMaterial color="#CBB070" metalness={0.85} roughness={0.25} />
       </mesh>
-      
+
       {/* Emerald Green Glass Shade */}
       <mesh position={[0.095, 0.42, 0]} rotation={[Math.PI / 2, 0, 0]} castShadow>
         <cylinderGeometry args={[0.06, 0.06, 0.24, 16, 1, false, 0, Math.PI]} />
-        <meshPhysicalMaterial 
-          color="#06401F" 
+        <meshPhysicalMaterial
+          color="#06401F"
           emissive="#011F0E"
-          roughness={0.12} 
+          roughness={0.12}
           metalness={0.05}
-          transmission={0.45} 
+          transmission={0.45}
           thickness={0.03}
         />
       </mesh>
-      
+
       {/* Active point light */}
-      <pointLight 
-        position={[0.095, 0.38, 0]} 
-        intensity={2.2} 
-        color="#FFF0CC" 
+      <pointLight
+        position={[0.095, 0.38, 0]}
+        intensity={2.2}
+        color="#FFF0CC"
         distance={6}
         decay={2.0}
       />
@@ -780,7 +795,7 @@ function LibraryChair() {
       <RoundedBox position={[0, 0.8, 0]} args={[0.74, 0.04, 0.74]} radius={0.02} smoothness={2} castShadow receiveShadow>
         <meshPhysicalMaterial color={COLORS.woodMedium} map={texture || undefined} roughness={0.5} />
       </RoundedBox>
-      
+
       {/* Legs */}
       <mesh position={[-0.3, 0.4, -0.3]} castShadow>
         <cylinderGeometry args={[0.02, 0.015, 0.8, 8]} />
@@ -812,7 +827,7 @@ function LibraryChair() {
         <cylinderGeometry args={[0.012, 0.012, 0.7, 8]} />
         <meshPhysicalMaterial color={COLORS.woodMedium} map={texture || undefined} roughness={0.6} />
       </mesh>
-      
+
       {/* Curved Backrest Top Board */}
       <RoundedBox position={[0, 1.5, -0.26]} args={[0.68, 0.06, 0.08]} radius={0.01} smoothness={2} castShadow>
         <meshPhysicalMaterial color={COLORS.woodMedium} map={texture || undefined} roughness={0.5} />
@@ -843,7 +858,7 @@ function OpenBook() {
       <RoundedBox position={[0.45, 0.02, 0]} rotation={[0, 0, -0.1]} args={[0.9, 0.02, 1.2]} radius={0.01} smoothness={2} castShadow>
         <meshPhysicalMaterial color={COLORS.bookBlack} roughness={0.7} />
       </RoundedBox>
-      
+
       {/* Stacked Pages - Bottom Layer */}
       <mesh position={[-0.44, 0.035, 0]} rotation={[0, 0, 0.08]}>
         <boxGeometry args={[0.82, 0.02, 1.17]} />
@@ -967,7 +982,7 @@ function FloorBooks() {
           <meshPhysicalMaterial color={COLORS.bookRed} roughness={0.7} />
         </RoundedBox>
       </group>
-      
+
       {/* Fallen Book 2 - leaning on the table leg */}
       <group position={[-2.4, -4.95, -0.5]} rotation={[0.15, -0.7, Math.PI / 2]}>
         <RoundedBox args={[0.1, 0.82, 0.56]} radius={0.008} smoothness={2} castShadow receiveShadow>
@@ -1003,11 +1018,11 @@ export function StylizedBookshelves({ scrollYProgress, isMobile = false }: Styli
           const texture = getWalnutTextureDark();
           return (
             <RoundedBox key={`p-${p.id}`} position={p.pos} args={p.scale} radius={0.015} smoothness={4} receiveShadow castShadow>
-              <meshPhysicalMaterial 
-                color={COLORS.woodDark} 
+              <meshPhysicalMaterial
+                color={COLORS.woodDark}
                 map={texture || undefined}
-                roughness={0.65} 
-                clearcoat={0.1} 
+                roughness={0.65}
+                clearcoat={0.1}
               />
             </RoundedBox>
           );
@@ -1020,11 +1035,11 @@ export function StylizedBookshelves({ scrollYProgress, isMobile = false }: Styli
           const texture = getWalnutTextureMedium();
           return (
             <RoundedBox key={`s-${s.id}`} position={s.pos} args={s.scale} radius={0.01} smoothness={4} receiveShadow castShadow>
-              <meshPhysicalMaterial 
-                color={COLORS.woodMedium} 
+              <meshPhysicalMaterial
+                color={COLORS.woodMedium}
                 map={texture || undefined}
-                roughness={0.55} 
-                clearcoat={0.15} 
+                roughness={0.55}
+                clearcoat={0.15}
               />
             </RoundedBox>
           );
