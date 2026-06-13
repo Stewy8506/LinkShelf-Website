@@ -59,23 +59,29 @@ export function Architecture() {
           </div>
         </motion.div>
  
-        {/* Right Column: Information & Text Details */}
+        {/* Right Column: Information & Text Details Card */}
         <motion.div
           initial={{ opacity: 0, x: 30 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
-          className="w-full"
+          className="border-[0.5px] border-border p-6 md:p-10 rounded-[16px] bg-card relative overflow-hidden shadow-xl w-full"
         >
-          <h2 className="text-3xl md:text-5xl font-semibold tracking-tight mb-6 text-text-primary">
+          {/* Subtle background grid pattern */}
+          <div className="absolute inset-0 opacity-15 pointer-events-none" style={{
+            backgroundImage: 'radial-gradient(circle at 2px 2px, var(--color-border) 1px, transparent 0)',
+            backgroundSize: '24px 24px'
+          }} />
+
+          <h2 className="text-3xl md:text-5xl font-semibold tracking-tight mb-6 text-text-primary relative z-10">
             Carefully engineered software.
           </h2>
-          <p className="text-text-secondary text-base md:text-lg leading-relaxed font-light mb-8">
+          <p className="text-text-secondary text-base md:text-lg leading-relaxed font-light mb-8 relative z-10">
             LinkShelf is built with a sophisticated sync engine leveraging Firebase Cloud Firestore for real-time state resolution, ensuring your freshness scores are consistent across all your devices down to the millisecond.
           </p>
           
           {/* Spec grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-6 border-t border-border">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-6 border-t border-border relative z-10">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <Cpu className="w-4 h-4 text-fresh-high" />

@@ -31,6 +31,7 @@ const DECAY_COLORS = [COLORS.bookDecay1, COLORS.bookDecay2];
 // ============================================================================
 let walnutTextureMedium: THREE.CanvasTexture | null = null;
 let walnutTextureDark: THREE.CanvasTexture | null = null;
+let walnutTextureTable: THREE.CanvasTexture | null = null;
 
 function createWalnutTexture(baseColor: string, grainColor: string) {
   const canvas = document.createElement("canvas");
@@ -80,6 +81,66 @@ function createWalnutTexture(baseColor: string, grainColor: string) {
   return texture;
 }
 
+function createTableWoodTexture() {
+  const canvas = document.createElement("canvas");
+  canvas.width = 1024;
+  canvas.height = 1024;
+  const ctx = canvas.getContext("2d")!;
+  
+  // Base warm walnut wood color (lighter than the dark pillars so grain shows)
+  ctx.fillStyle = "#362217";
+  ctx.fillRect(0, 0, 1024, 1024);
+  
+  // High-contrast, rich wood grain lines running horizontally (along table length)
+  for (let i = 0; i < 120; i++) {
+    const y = Math.random() * 1024;
+    const thickness = Math.random() * 2.2 + 0.8;
+    
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.bezierCurveTo(
+      256, y + (Math.random() - 0.5) * 35,
+      768, y + (Math.random() - 0.5) * 35,
+      1024, y
+    );
+    ctx.globalAlpha = Math.random() * 0.18 + 0.08;
+    ctx.lineWidth = thickness;
+    ctx.strokeStyle = "#1A0F0A";
+    ctx.stroke();
+  }
+
+  // Draw 4 distinct wood plank joint lines to make it look like a real panel-built table
+  ctx.globalAlpha = 0.25;
+  ctx.strokeStyle = "#120A06";
+  ctx.lineWidth = 2.0;
+  for (let p = 1; p < 4; p++) {
+    const y = (1024 / 4) * p;
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(1024, y);
+    ctx.stroke();
+  }
+  
+  // Add some soft wood gradients/plank shading depth
+  ctx.globalAlpha = 1.0;
+  for (let i = 0; i < 25; i++) {
+    const y = Math.random() * 1024;
+    const h = Math.random() * 60 + 20;
+    const grad = ctx.createLinearGradient(0, y, 0, y + h);
+    grad.addColorStop(0, "rgba(0,0,0,0)");
+    grad.addColorStop(0.5, `rgba(0,0,0,${Math.random() * 0.05})`);
+    grad.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, y, 1024, h);
+  }
+  
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(1, 1);
+  return texture;
+}
+
 function getWalnutTextureMedium() {
   if (typeof window === "undefined") return null;
   if (!walnutTextureMedium) {
@@ -94,6 +155,14 @@ function getWalnutTextureDark() {
     walnutTextureDark = createWalnutTexture("#22160F", "#140C07");
   }
   return walnutTextureDark;
+}
+
+function getWalnutTextureTable() {
+  if (typeof window === "undefined") return null;
+  if (!walnutTextureTable) {
+    walnutTextureTable = createTableWoodTexture();
+  }
+  return walnutTextureTable;
 }
 
 // ============================================================================
@@ -620,18 +689,18 @@ function BookshelfBacking() {
 
 // Detailed Library Table with walnut grain
 function LibraryTable() {
-  const texture = getWalnutTextureDark();
+  const texture = getWalnutTextureTable();
   return (
     <group position={[0, -5, 0]} receiveShadow castShadow>
       {/* Table Top */}
       <RoundedBox position={[0, 1.5, 0]} args={[8, 0.2, 4]} radius={0.05} smoothness={4} receiveShadow castShadow>
         <meshPhysicalMaterial 
-          color={COLORS.tableWood} 
+          color={texture ? "#ffffff" : COLORS.tableWood} 
           map={texture || undefined}
-          roughness={0.45} 
-          metalness={0.1} 
-          clearcoat={0.35} 
-          clearcoatRoughness={0.2} 
+          roughness={0.4} 
+          metalness={0.05} 
+          clearcoat={0.4} 
+          clearcoatRoughness={0.18} 
         />
       </RoundedBox>
       {/* Legs */}
@@ -654,7 +723,7 @@ function LibraryTable() {
 // Traditional green bankers lamp
 function BankersLamp() {
   return (
-    <group position={[-0.8, -3.38, 0.4]} rotation={[0, 0.35, 0]}>
+    <group position={[-0.8, -3.4, 0.4]} rotation={[0, 0.35, 0]}>
       {/* Brass circular base */}
       <mesh position={[0, 0.015, 0]} castShadow>
         <cylinderGeometry args={[0.09, 0.09, 0.03, 16]} />
@@ -761,7 +830,7 @@ function Rug() {
 // Glowing Open Book
 function OpenBook() {
   return (
-    <group position={[0, -3.38, 0.2]} rotation={[0.1, -0.25, 0]} castShadow>
+    <group position={[0, -3.4, 0.2]} rotation={[0, -0.25, 0]} castShadow>
       {/* Left Cover */}
       <RoundedBox position={[-0.45, 0.02, 0]} rotation={[0, 0, 0.1]} args={[0.9, 0.02, 1.2]} radius={0.01} smoothness={2} castShadow>
         <meshPhysicalMaterial color={COLORS.bookBlack} roughness={0.7} />
@@ -853,10 +922,10 @@ function OpenBook() {
   );
 }
 
-// Minimalist Quill Pen & Brass Inkwell next to the open book
+// Detailed Quill Pen & Brass Inkwell next to the open book
 function QuillAndInkwell() {
   return (
-    <group position={[-0.72, -3.38, 0.6]}>
+    <group position={[-0.72, -3.4, 0.6]}>
       {/* Brass Inkwell base */}
       <mesh position={[0, 0.02, 0]} castShadow>
         <cylinderGeometry args={[0.035, 0.045, 0.04, 12]} />
@@ -868,16 +937,16 @@ function QuillAndInkwell() {
         <meshBasicMaterial color="#0A0A0F" />
       </mesh>
       {/* Quill Pen (leaning out) */}
-      <group position={[0.01, 0.03, -0.01]} rotation={[0.4, 0.1, 0.5]}>
-        {/* Shaft */}
-        <mesh position={[0, 0.15, 0]} castShadow>
-          <cylinderGeometry args={[0.003, 0.003, 0.26, 8]} />
-          <meshPhysicalMaterial color="#EDEDE6" roughness={0.6} />
+      <group position={[0.01, 0.03, -0.01]} rotation={[0.4, 0.15, 0.5]}>
+        {/* Golden-horn Shaft */}
+        <mesh position={[0, 0.13, 0]} castShadow>
+          <cylinderGeometry args={[0.004, 0.004, 0.26, 8]} />
+          <meshPhysicalMaterial color="#D4AF37" metalness={0.7} roughness={0.3} />
         </mesh>
-        {/* White feather vane */}
-        <mesh position={[0, 0.24, 0.008]} rotation={[0, 0.15, 0]} castShadow>
-          <boxGeometry args={[0.001, 0.16, 0.03]} />
-          <meshPhysicalMaterial color="#F4F2EB" roughness={0.9} />
+        {/* Detailed Dark Feather vane */}
+        <mesh position={[0, 0.23, 0.008]} rotation={[0, 0.7, 0.05]} castShadow>
+          <boxGeometry args={[0.006, 0.18, 0.06]} />
+          <meshPhysicalMaterial color="#2E3033" roughness={0.85} clearcoat={0.1} />
         </mesh>
       </group>
     </group>
