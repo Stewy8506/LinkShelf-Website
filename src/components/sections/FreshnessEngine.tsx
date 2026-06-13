@@ -56,7 +56,7 @@ export function FreshnessEngine() {
             <div className="mb-8 max-w-md mx-auto relative px-2">
               <div className="absolute top-1/2 left-0 right-0 h-[1px] bg-border -translate-y-1/2" />
               <div 
-                className="absolute top-1/2 left-0 h-[1.5px] bg-fresh-high -translate-y-1/2 transition-all duration-100 ease-out" 
+                className="absolute top-1/2 left-0 h-[1.5px] bg-fresh-high -translate-y-1/2" 
                 style={{ width: `${progress * 100}%` }}
               />
               <div className="relative flex justify-between">

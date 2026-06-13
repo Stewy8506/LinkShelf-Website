@@ -74,13 +74,21 @@ const KEYFRAMES = [
 ];
 
 function interpolateKeyframes(scroll: number) {
-  const s = Math.max(0, Math.min(1, scroll));
+  let s = Math.max(0, Math.min(1, scroll));
+  if (isNaN(s)) {
+    s = 0;
+  }
   
   let i = 0;
   for (; i < KEYFRAMES.length - 1; i++) {
     if (s >= KEYFRAMES[i].scroll && s <= KEYFRAMES[i + 1].scroll) {
       break;
     }
+  }
+  
+  // Ensure we don't index out of bounds if the loop somehow doesn't break
+  if (i >= KEYFRAMES.length - 1) {
+    i = KEYFRAMES.length - 2;
   }
   
   const start = KEYFRAMES[i];
@@ -118,7 +126,13 @@ function interpolateKeyframes(scroll: number) {
   };
 }
 
-function EcosystemScene({ onLoaded }: { onLoaded?: () => void }) {
+function EcosystemScene({ 
+  onLoaded, 
+  isLoaded 
+}: { 
+  onLoaded?: () => void; 
+  isLoaded: boolean; 
+}) {
   const { scrollYProgress } = useScroll();
   const groupRef = useRef<THREE.Group>(null!);
 
@@ -142,7 +156,8 @@ function EcosystemScene({ onLoaded }: { onLoaded?: () => void }) {
       }
     }
 
-    const scroll = scrollYProgress.get();
+    // Lock camera target to scroll = 0 during loading to prevent scroll restoration jumps
+    const scroll = isLoaded ? scrollYProgress.get() : 0;
     
     // Interpolate keyframe values
     const target = interpolateKeyframes(scroll);
@@ -184,7 +199,7 @@ function EcosystemScene({ onLoaded }: { onLoaded?: () => void }) {
 
   return (
     <>
-      <PerspectiveCamera makeDefault fov={50} />
+      <PerspectiveCamera makeDefault fov={50} position={[3.5, -0.8, -20.0]} />
       <SoftShadows size={15} samples={16} focus={0.5} />
       
       {/* Fog to obscure the back wall and add atmospheric depth */}
@@ -247,10 +262,10 @@ function EcosystemScene({ onLoaded }: { onLoaded?: () => void }) {
             {/* N8AO for extremely realistic contact shadows in the shelves */}
             <N8AOComponent aoRadius={1.5} intensity={2.5} color="black" />
             <BloomComponent 
-              luminanceThreshold={1.0} // Only bloom things with emissive intensity > 1.0 (the open book & lamp glow)
+              luminanceThreshold={1.2} // Only bloom things with emissive intensity > 1.2 (the open book & lamp glow)
               luminanceSmoothing={0.5}
               mipmapBlur 
-              intensity={1.2} 
+              intensity={0.85} 
             />
           </EffectComposerComponent>
         );
@@ -259,7 +274,13 @@ function EcosystemScene({ onLoaded }: { onLoaded?: () => void }) {
   );
 }
 
-export function BackgroundEcosystem({ onLoaded }: { onLoaded?: () => void }) {
+export function BackgroundEcosystem({ 
+  onLoaded, 
+  isLoaded = false 
+}: { 
+  onLoaded?: () => void; 
+  isLoaded?: boolean; 
+}) {
   return (
     <div className="fixed inset-0 z-0 pointer-events-none" aria-hidden="true">
       <Canvas 
@@ -268,7 +289,7 @@ export function BackgroundEcosystem({ onLoaded }: { onLoaded?: () => void }) {
         dpr={[1, 1.5]}
       >
         <color attach="background" args={["#020306"]} />
-        <EcosystemScene onLoaded={onLoaded} />
+        <EcosystemScene onLoaded={onLoaded} isLoaded={isLoaded} />
       </Canvas>
       {/* Cinematic vignette for text readability */}
       <div 

@@ -1,85 +1,98 @@
 "use client";
-
+ 
 import { motion } from "framer-motion";
-
+import { Laptop, Smartphone, Globe, Database, Cpu, Shield } from "lucide-react";
+ 
 export function Architecture() {
   return (
     <section id="architecture" className="relative py-20 md:py-32 px-6 md:px-12 max-w-5xl mx-auto z-10 border-t border-border">
-      <div className="flex flex-col md:flex-row gap-12 md:gap-20 items-center">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
+        {/* Left Column: Static Visual Diagram Card */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 1, ease: "easeOut" }}
-          className="w-full md:w-1/2"
+          className="border-[0.5px] border-border p-6 md:p-10 rounded-[16px] bg-card relative overflow-hidden shadow-xl aspect-square flex items-center justify-center"
         >
-          {/* Abstract Architecture Visual */}
-          <div className="aspect-square rounded-[16px] bg-surface flex items-center justify-center border-[0.5px] border-border overflow-hidden relative shadow-inner">
-            <div className="absolute inset-0 opacity-20" style={{
-              backgroundImage: 'radial-gradient(circle at 2px 2px, var(--color-border) 1px, transparent 0)',
-              backgroundSize: '24px 24px'
-            }} />
-            <div className="w-32 h-32 bg-card border-[0.5px] border-border rounded-[12px] flex items-center justify-center relative z-10 shadow-2xl">
-              <div className="w-16 h-16 rounded-full border border-fresh-high/50 flex items-center justify-center relative">
-                <div className="w-2 h-2 bg-fresh-high rounded-full absolute top-0 -mt-1 animate-ping" />
+          {/* Subtle background grid pattern */}
+          <div className="absolute inset-0 opacity-15 pointer-events-none" style={{
+            backgroundImage: 'radial-gradient(circle at 2px 2px, var(--color-border) 1px, transparent 0)',
+            backgroundSize: '24px 24px'
+          }} />
+ 
+          <div className="flex items-center justify-between w-full relative z-10">
+            {/* Client Platform Nodes Stack */}
+            <div className="flex flex-col gap-4 z-10">
+              <div className="flex items-center gap-2.5 px-4 py-2.5 bg-surface border border-border rounded-xl font-mono text-[10px] text-text-secondary select-none">
+                <Laptop className="w-3.5 h-3.5 text-text-tertiary" />
+                MACOS DESKTOP
+              </div>
+              <div className="flex items-center gap-2.5 px-4 py-2.5 bg-surface border border-border rounded-xl font-mono text-[10px] text-text-secondary select-none">
+                <Smartphone className="w-3.5 h-3.5 text-text-tertiary" />
+                IOS / ANDROID
+              </div>
+              <div className="flex items-center gap-2.5 px-4 py-2.5 bg-surface border border-border rounded-xl font-mono text-[10px] text-text-secondary select-none">
+                <Globe className="w-3.5 h-3.5 text-text-tertiary" />
+                CHROME EXT
               </div>
             </div>
-            
-            {/* Connecting lines */}
-            <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-50" viewBox="0 0 100 100" preserveAspectRatio="none">
-              <path d="M 50 50 L 10 20" stroke="var(--color-border)" strokeWidth="0.5" fill="none" />
-              <path d="M 50 50 L 90 20" stroke="var(--color-border)" strokeWidth="0.5" fill="none" />
-              <path d="M 50 50 L 10 80" stroke="var(--color-border)" strokeWidth="0.5" fill="none" />
-              <path d="M 50 50 L 90 80" stroke="var(--color-border)" strokeWidth="0.5" fill="none" />
-              
-              {/* Dynamic Flow lines overlay */}
-              <path d="M 50 50 L 10 20" stroke="var(--color-fresh-high)" strokeWidth="0.8" fill="none" strokeDasharray="4, 12" className="animate-flow-svg-reverse" />
-              <path d="M 50 50 L 90 20" stroke="var(--color-fresh-high)" strokeWidth="0.8" fill="none" strokeDasharray="4, 12" className="animate-flow-svg" />
-              <path d="M 50 50 L 10 80" stroke="var(--color-fresh-high)" strokeWidth="0.8" fill="none" strokeDasharray="4, 12" className="animate-flow-svg-reverse" />
-              <path d="M 50 50 L 90 80" stroke="var(--color-fresh-high)" strokeWidth="0.8" fill="none" strokeDasharray="4, 12" className="animate-flow-svg" />
+ 
+            {/* Static SVG Connector Lines */}
+            <svg className="w-16 h-32 text-border pointer-events-none z-0" viewBox="0 0 60 120" fill="none">
+              {/* Top Node Connector */}
+              <path d="M 0 22 H 30 V 60 H 60" stroke="currentColor" strokeWidth="1" strokeDasharray="3,3" />
+              {/* Middle Node Connector */}
+              <path d="M 0 60 H 60" stroke="currentColor" strokeWidth="1" strokeDasharray="3,3" />
+              {/* Bottom Node Connector */}
+              <path d="M 0 98 H 30 V 60" stroke="currentColor" strokeWidth="1" strokeDasharray="3,3" />
+              {/* Junction Node */}
+              <circle cx="30" cy="60" r="2.5" className="fill-text-tertiary/20 stroke-border" />
             </svg>
-            <style>{`
-              @keyframes svg-flow {
-                to {
-                  stroke-dashoffset: -16;
-                }
-              }
-              @keyframes svg-flow-reverse {
-                to {
-                  stroke-dashoffset: 16;
-                }
-              }
-              .animate-flow-svg {
-                animation: svg-flow 3s linear infinite;
-              }
-              .animate-flow-svg-reverse {
-                animation: svg-flow-reverse 3s linear infinite;
-              }
-            `}</style>
+ 
+            {/* Cloud Firestore Sync Hub Node */}
+            <div className="flex flex-col items-center gap-2.5 p-4.5 bg-surface border border-fresh-high/20 rounded-2xl shadow-[0_0_30px_rgba(134,239,172,0.04)] max-w-[130px] text-center z-10 select-none">
+              <Database className="w-6 h-6 text-fresh-high" />
+              <span className="font-mono text-[9px] uppercase tracking-widest text-text-primary">Firestore</span>
+              <span className="text-[8px] font-mono text-text-tertiary uppercase tracking-wider">Sync Hub</span>
+            </div>
           </div>
         </motion.div>
-
+ 
+        {/* Right Column: Information & Text Details */}
         <motion.div
           initial={{ opacity: 0, x: 30 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
-          className="w-full md:w-1/2"
+          className="w-full"
         >
-          <h2 className="text-2xl md:text-3xl font-semibold tracking-tight mb-6 text-text-primary">
+          <h2 className="text-3xl md:text-5xl font-semibold tracking-tight mb-6 text-text-primary">
             Carefully engineered software.
           </h2>
           <p className="text-text-secondary text-base md:text-lg leading-relaxed font-light mb-8">
             LinkShelf is built with a sophisticated sync engine leveraging Firebase Cloud Firestore for real-time state resolution, ensuring your freshness scores are consistent across all your devices down to the millisecond.
           </p>
-          <div className="space-y-6">
-            <div className="pb-6 border-b border-border">
-              <h4 className="font-mono text-xs uppercase tracking-widest text-text-tertiary mb-2">Architecture</h4>
-              <p className="text-sm text-text-secondary">Native client performance backed by a globally distributed serverless database.</p>
+          
+          {/* Spec grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-6 border-t border-border">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <Cpu className="w-4 h-4 text-fresh-high" />
+                <h4 className="font-mono text-xs uppercase tracking-widest text-text-tertiary">Architecture</h4>
+              </div>
+              <p className="text-sm text-text-secondary leading-normal pt-1 font-light">
+                Native client performance backed by a globally distributed serverless database.
+              </p>
             </div>
-            <div>
-              <h4 className="font-mono text-xs uppercase tracking-widest text-text-tertiary mb-2">Security</h4>
-              <p className="text-sm text-text-secondary">End-to-end robust security rules protecting your private reading backlog.</p>
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <Shield className="w-4 h-4 text-fresh-high" />
+                <h4 className="font-mono text-xs uppercase tracking-widest text-text-tertiary">Security</h4>
+              </div>
+              <p className="text-sm text-text-secondary leading-normal pt-1 font-light">
+                End-to-end robust security rules protecting your private reading backlog.
+              </p>
             </div>
           </div>
         </motion.div>

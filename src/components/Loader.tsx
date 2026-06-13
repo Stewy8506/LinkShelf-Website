@@ -1,70 +1,71 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 
 export function Loader({ isCanvasReady, onComplete }: { isCanvasReady: boolean; onComplete: () => void }) {
-  const [progress, setProgress] = useState(0);
+  // Derive completion state directly from prop to avoid redundant state sync and cascading renders
+  const isComplete = isCanvasReady;
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        // Hold at 95% until the 3D Canvas has loaded its first frame
-        if (prev >= 95 && !isCanvasReady) {
-          return 95;
-        }
-        if (prev >= 100) {
-          clearInterval(interval);
-          return 100;
-        }
-        // Swift, smooth steps
-        const step = Math.floor(Math.random() * 12) + 6;
-        return Math.min(100, prev + step);
-      });
-    }, 80);
-
-    return () => clearInterval(interval);
-  }, [isCanvasReady]);
-
-  useEffect(() => {
-    if (progress === 100) {
+    if (isCanvasReady) {
+      // Wait for the 100% CSS transition to complete before triggering fade-out
       const timer = setTimeout(() => {
         onComplete();
-      }, 300);
+      }, 700);
       return () => clearTimeout(timer);
     }
-  }, [progress, onComplete]);
-
-  // Minimalist decay indicator color
-  const textColor =
-    progress < 40
-      ? "text-fresh-high"
-      : progress < 80
-      ? "text-fresh-mid"
-      : "text-fresh-low";
+  }, [isCanvasReady, onComplete]);
 
   return (
     <motion.div
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed inset-0 z-[9999] bg-[#0C0C0C] flex items-center justify-center select-none"
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      className="fixed inset-0 z-[9999] bg-[#020306] flex items-center justify-center select-none"
     >
-      <div className="flex flex-col items-center gap-4">
-        {/* Sleek logo name with running percentage counter */}
-        <div className="flex items-baseline gap-3">
-          <span className="font-semibold text-lg tracking-tight text-[#EDEDEC]">LinkShelf</span>
-          <span className={`font-mono text-xs tracking-wider transition-colors duration-300 w-10 text-right ${textColor}`}>
-            {progress.toString().padStart(2, "0")}%
+      <style>{`
+        @keyframes loader-shimmer {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+        @keyframes text-pulse {
+          0%, 100% { opacity: 0.35; }
+          50% { opacity: 0.95; }
+        }
+        .loader-bar-fill {
+          width: ${isComplete ? "100%" : "90%"};
+          transition: width ${isComplete ? "0.7s" : "4.5s"} cubic-bezier(0.1, 0.8, 0.2, 1);
+        }
+      `}</style>
+
+      <div className="flex flex-col items-center gap-6">
+        {/* Sleek Logo and Pulsing Status */}
+        <div className="flex flex-col items-center gap-2.5">
+          <span className="font-semibold text-lg tracking-[0.08em] text-[#F4F1EA]">LinkShelf</span>
+          <span
+            className="font-mono text-[8.5px] tracking-[0.3em] text-fresh-high uppercase"
+            style={{ animation: "text-pulse 1.8s infinite ease-in-out" }}
+          >
+            {isComplete ? "readying environment" : "retrieving shelves"}
           </span>
         </div>
 
-        {/* Minimalist single pixel progress line */}
-        <div className="w-24 h-[1px] bg-border/20 rounded-full overflow-hidden relative">
-          <div 
-            className="h-full bg-[#EDEDEC] transition-all duration-150 ease-out"
-            style={{ width: `${progress}%` }}
-          />
+        {/* Minimalist Progress Line */}
+        <div className="w-48 h-[1px] bg-white/5 rounded-full overflow-hidden relative">
+          <div
+            className="h-full bg-gradient-to-r from-fresh-high via-[#F4F1EA] to-fresh-high loader-bar-fill relative"
+            style={{ transformOrigin: "left" }}
+          >
+            {/* Shimmer reflection passing through the bar */}
+            <div
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+              style={{
+                width: "100%",
+                animation: "loader-shimmer 1.6s infinite linear",
+              }}
+            />
+          </div>
         </div>
       </div>
     </motion.div>

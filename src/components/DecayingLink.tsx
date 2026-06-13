@@ -110,7 +110,7 @@ export function DecayingLink({ title, url, freshness, className, delay = 0 }: De
       <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-border/30">
         <div
           style={{ width: `${Math.max(0, Math.min(100, freshness * 100))}%` }}
-          className={cn("h-full transition-all duration-300 ease-out", accentColor)}
+          className={cn("h-full transition-colors duration-300 ease-out", accentColor)}
         />
       </div>
     </motion.div>
