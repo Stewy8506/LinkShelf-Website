@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { SmoothScroll } from "@/components/SmoothScroll";
-import { AtmosphereCanvas } from "@/components/AtmosphereCanvas";
+import { BackgroundEcosystem } from "@/components/canvas/BackgroundEcosystem";
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/sections/Hero";
 import { Philosophy } from "@/components/sections/Philosophy";
@@ -25,7 +25,7 @@ export default function Home() {
 
       {!loading && (
         <SmoothScroll>
-          <AtmosphereCanvas />
+          <BackgroundEcosystem />
           <Header />
           
           <main id="main-content" className="relative z-10 w-full">

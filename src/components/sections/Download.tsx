@@ -240,7 +240,7 @@ export function Download() {
   };
 
   return (
-    <section id="download" className="relative py-20 md:py-32 px-6 md:px-12 max-w-6xl mx-auto z-10 bg-background">
+    <section id="download" className="relative py-20 md:py-32 px-6 md:px-12 max-w-6xl mx-auto z-10 bg-transparent">
       <div className="text-center mb-12 md:mb-16">
         <h2 className="text-3xl md:text-5xl font-semibold tracking-tight text-text-primary">
           Get LinkShelf
