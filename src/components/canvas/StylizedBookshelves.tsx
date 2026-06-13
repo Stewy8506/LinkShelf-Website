@@ -657,7 +657,7 @@ function CeilingBeams() {
 }
 
 // Solid matte wood backing panels for the shelves (leaving window clear)
-function BookshelfBacking() {
+function BookshelfBacking({ isMobile = false }: { isMobile?: boolean }) {
   const height = 9 * 1.8;
   const sideHeight = 7 * 1.8;
   const startY = -4.5;
@@ -674,15 +674,19 @@ function BookshelfBacking() {
         <meshPhysicalMaterial color="#140D0A" roughness={0.9} metalness={0.0} />
       </mesh>
       
-      <mesh position={[-14.45, startY + sideHeight / 2, -9.0]} castShadow receiveShadow>
-        <boxGeometry args={[0.05, sideHeight, 28.0]} />
-        <meshPhysicalMaterial color="#140D0A" roughness={0.9} metalness={0.0} />
-      </mesh>
-      
-      <mesh position={[14.45, startY + sideHeight / 2, -9.0]} castShadow receiveShadow>
-        <boxGeometry args={[0.05, sideHeight, 28.0]} />
-        <meshPhysicalMaterial color="#140D0A" roughness={0.9} metalness={0.0} />
-      </mesh>
+      {!isMobile && (
+        <>
+          <mesh position={[-14.45, startY + sideHeight / 2, -9.0]} castShadow receiveShadow>
+            <boxGeometry args={[0.05, sideHeight, 28.0]} />
+            <meshPhysicalMaterial color="#140D0A" roughness={0.9} metalness={0.0} />
+          </mesh>
+          
+          <mesh position={[14.45, startY + sideHeight / 2, -9.0]} castShadow receiveShadow>
+            <boxGeometry args={[0.05, sideHeight, 28.0]} />
+            <meshPhysicalMaterial color="#140D0A" roughness={0.9} metalness={0.0} />
+          </mesh>
+        </>
+      )}
     </group>
   );
 }
@@ -979,50 +983,55 @@ function FloorBooks() {
 // ============================================================================
 interface StylizedBookshelvesProps {
   scrollYProgress: MotionValue<number>;
+  isMobile?: boolean;
 }
 
-export function StylizedBookshelves({ scrollYProgress }: StylizedBookshelvesProps) {
+export function StylizedBookshelves({ scrollYProgress, isMobile = false }: StylizedBookshelvesProps) {
   return (
     <group>
       {/* Render Architecture */}
       <FloorPlanks />
       <CeilingBeams />
       <ArchedWindow />
-      <BookshelfBacking />
+      <BookshelfBacking isMobile={isMobile} />
       <VolumetricLight />
 
       {/* Render Pillars with walnut texture */}
-      {LIBRARY_DATA.pillars.map((p) => {
-        const texture = getWalnutTextureDark();
-        return (
-          <RoundedBox key={`p-${p.id}`} position={p.pos} args={p.scale} radius={0.015} smoothness={4} receiveShadow castShadow>
-            <meshPhysicalMaterial 
-              color={COLORS.woodDark} 
-              map={texture || undefined}
-              roughness={0.65} 
-              clearcoat={0.1} 
-            />
-          </RoundedBox>
-        );
-      })}
+      {LIBRARY_DATA.pillars
+        .filter((p) => !isMobile || p.pos[2] < -21)
+        .map((p) => {
+          const texture = getWalnutTextureDark();
+          return (
+            <RoundedBox key={`p-${p.id}`} position={p.pos} args={p.scale} radius={0.015} smoothness={4} receiveShadow castShadow>
+              <meshPhysicalMaterial 
+                color={COLORS.woodDark} 
+                map={texture || undefined}
+                roughness={0.65} 
+                clearcoat={0.1} 
+              />
+            </RoundedBox>
+          );
+        })}
 
       {/* Render Shelves with walnut texture */}
-      {LIBRARY_DATA.shelves.map((s) => {
-        const texture = getWalnutTextureMedium();
-        return (
-          <RoundedBox key={`s-${s.id}`} position={s.pos} args={s.scale} radius={0.01} smoothness={4} receiveShadow castShadow>
-            <meshPhysicalMaterial 
-              color={COLORS.woodMedium} 
-              map={texture || undefined}
-              roughness={0.55} 
-              clearcoat={0.15} 
-            />
-          </RoundedBox>
-        );
-      })}
+      {LIBRARY_DATA.shelves
+        .filter((s) => !isMobile || s.pos[2] < -21)
+        .map((s) => {
+          const texture = getWalnutTextureMedium();
+          return (
+            <RoundedBox key={`s-${s.id}`} position={s.pos} args={s.scale} radius={0.01} smoothness={4} receiveShadow castShadow>
+              <meshPhysicalMaterial 
+                color={COLORS.woodMedium} 
+                map={texture || undefined}
+                roughness={0.55} 
+                clearcoat={0.15} 
+              />
+            </RoundedBox>
+          );
+        })}
 
-      {/* Render Instanced Static Books (Simple covers) */}
-      {Object.entries(LIBRARY_DATA.simpleCovers).map(([color, matrices]) => (
+      {/* Render Instanced Static Books (Simple covers) - skipped on mobile since they are offscreen */}
+      {!isMobile && Object.entries(LIBRARY_DATA.simpleCovers).map(([color, matrices]) => (
         matrices.length > 0 && (
           <InstancedBooks
             key={`inst-simple-${color}`}

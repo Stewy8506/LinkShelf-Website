@@ -4,7 +4,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment, PerspectiveCamera, SoftShadows } from "@react-three/drei";
 import { EffectComposer, Bloom, N8AO } from "@react-three/postprocessing";
 import { useScroll } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import * as THREE from "three";
 import { StylizedBookshelves } from "./StylizedBookshelves";
 import { FloatingEntities } from "./FloatingEntities";
@@ -128,10 +128,12 @@ function interpolateKeyframes(scroll: number) {
 
 function EcosystemScene({ 
   onLoaded, 
-  isLoaded 
+  isLoaded,
+  isMobile = false
 }: { 
   onLoaded?: () => void; 
   isLoaded: boolean; 
+  isMobile?: boolean;
 }) {
   const { scrollYProgress } = useScroll();
   const groupRef = useRef<THREE.Group>(null!);
@@ -215,7 +217,7 @@ function EcosystemScene({
         intensity={2.0} 
         color="#A6C2F5"
         castShadow
-        shadow-mapSize={[1024, 1024]}
+        shadow-mapSize={isMobile ? [512, 512] : [1024, 1024]}
         shadow-camera-left={-15}
         shadow-camera-right={15}
         shadow-camera-top={15}
@@ -235,7 +237,7 @@ function EcosystemScene({
       <Environment preset="apartment" />
 
       <group ref={groupRef}>
-        <StylizedBookshelves scrollYProgress={scrollYProgress} />
+        <StylizedBookshelves scrollYProgress={scrollYProgress} isMobile={isMobile} />
         {/* We can remove FloatingEntities for this realistic scene or keep it as subtle dust. Let's keep it as dust. */}
         <FloatingEntities scrollYProgress={scrollYProgress} />
       </group>
@@ -259,8 +261,8 @@ function EcosystemScene({
         }>;
         return (
           <EffectComposerComponent disableNormalPass>
-            {/* N8AO for extremely realistic contact shadows in the shelves */}
-            <N8AOComponent aoRadius={1.5} intensity={2.5} color="black" />
+            {/* N8AO for extremely realistic contact shadows in the shelves - bypassed on mobile for rendering speed */}
+            {!isMobile && <N8AOComponent aoRadius={1.5} intensity={2.5} color="black" />}
             <BloomComponent 
               luminanceThreshold={1.2} // Only bloom things with emissive intensity > 1.2 (the open book & lamp glow)
               luminanceSmoothing={0.5}
@@ -281,15 +283,26 @@ export function BackgroundEcosystem({
   onLoaded?: () => void; 
   isLoaded?: boolean; 
 }) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   return (
     <div className="fixed inset-0 z-0 pointer-events-none" aria-hidden="true">
       <Canvas 
         shadows
-        gl={{ antialias: true, alpha: false, toneMapping: THREE.ACESFilmicToneMapping }} 
-        dpr={[1, 1.5]}
+        gl={{ antialias: !isMobile, alpha: false, toneMapping: THREE.ACESFilmicToneMapping }} 
+        dpr={isMobile ? 1.0 : [1, 1.5]}
       >
         <color attach="background" args={["#020306"]} />
-        <EcosystemScene onLoaded={onLoaded} isLoaded={isLoaded} />
+        <EcosystemScene onLoaded={onLoaded} isLoaded={isLoaded} isMobile={isMobile} />
       </Canvas>
       {/* Cinematic vignette for text readability */}
       <div 
