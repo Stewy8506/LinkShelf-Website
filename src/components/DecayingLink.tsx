@@ -15,9 +15,10 @@ interface DecayingLinkProps {
   freshness: number; // 0.0 to 1.0
   className?: string;
   delay?: number;
+  compact?: boolean;
 }
 
-export function DecayingLink({ title, url, freshness, className, delay = 0 }: DecayingLinkProps) {
+export function DecayingLink({ title, url, freshness, className, delay = 0, compact = false }: DecayingLinkProps) {
   // Extract domain, age, and read time matching Flutter app's metadata style
   const { domain, age, readTime } = useMemo(() => {
     let domain = url;
@@ -88,7 +89,8 @@ export function DecayingLink({ title, url, freshness, className, delay = 0 }: De
       role="button"
       tabIndex={0}
       className={cn(
-        "relative py-[16px] pr-[16px] pl-[19.5px] my-[5px] mx-[16px] rounded-[12px] border-[0.5px] border-border bg-card flex flex-col justify-center overflow-hidden transition-colors duration-300 group cursor-pointer",
+        "relative rounded-[12px] border-[0.5px] border-border bg-card flex flex-col justify-center overflow-hidden transition-colors duration-300 group cursor-pointer",
+        compact ? "py-2 pr-3 pl-4 my-1 mx-0" : "py-[16px] pr-[16px] pl-[19.5px] my-[5px] mx-[16px]",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text-primary",
         className
       )}
@@ -97,11 +99,11 @@ export function DecayingLink({ title, url, freshness, className, delay = 0 }: De
       <div className={cn("absolute left-0 top-0 bottom-0 w-[3.5px]", accentColor)} />
 
       {/* Main Content */}
-      <div className="flex flex-col gap-[4px] text-left">
-        <h4 className="text-[14px] font-medium leading-[1.4] tracking-[-0.1px] text-text-primary group-hover:text-white transition-colors duration-300">
+      <div className={cn("flex flex-col text-left", compact ? "gap-0.5" : "gap-[4px]")}>
+        <h4 className={cn("font-medium leading-[1.4] tracking-[-0.1px] text-text-primary group-hover:text-white transition-colors duration-300", compact ? "text-xs" : "text-[14px]")}>
           {title}
         </h4>
-        <span className="text-[12px] leading-normal text-text-secondary font-sans">
+        <span className={cn("leading-normal text-text-secondary font-sans", compact ? "text-[10px]" : "text-[12px]")}>
           {domain} &middot; {age} &middot; {readTime} min read
         </span>
       </div>

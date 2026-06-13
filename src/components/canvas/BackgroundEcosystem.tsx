@@ -201,7 +201,7 @@ function EcosystemScene({
 
   return (
     <>
-      <PerspectiveCamera makeDefault fov={50} position={[3.5, -0.8, -20.0]} />
+      <PerspectiveCamera makeDefault fov={isMobile ? 68 : 50} position={[3.5, -0.8, -20.0]} />
       <SoftShadows size={15} samples={16} focus={0.5} />
       
       {/* Fog to obscure the back wall and add atmospheric depth */}

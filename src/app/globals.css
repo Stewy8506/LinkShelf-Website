@@ -35,3 +35,13 @@ html, body {
   /* Dark aesthetic everywhere */
   @apply antialiased selection:bg-fresh-high/30 selection:text-fresh-high;
 }
+
+/* Hide scrollbars but keep functionality */
+.scrollbar-none {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
+

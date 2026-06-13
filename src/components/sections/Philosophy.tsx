@@ -4,15 +4,15 @@ import { motion } from "framer-motion";
 
 export function Philosophy() {
   return (
-    <section id="philosophy" className="relative py-20 md:py-32 px-6 md:px-12 max-w-5xl mx-auto z-10">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
+    <section id="philosophy" className="relative py-12 md:py-32 px-4 xs:px-6 md:px-12 max-w-5xl mx-auto z-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-20 items-center">
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 1, ease: "easeOut" }}
         >
-          <h2 className="text-3xl md:text-5xl font-semibold tracking-tight mb-6 text-text-primary">
+          <h2 className="text-2xl xs:text-3xl md:text-5xl font-semibold tracking-tight mb-4 md:mb-6 text-text-primary">
             Most read-later apps become infinite graveyards.
           </h2>
           <p className="text-text-secondary text-base md:text-lg leading-relaxed mb-6 font-light">
@@ -28,7 +28,7 @@ export function Philosophy() {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
-          className="border-[0.5px] border-border p-6 md:p-10 rounded-[16px] bg-card relative overflow-hidden shadow-xl"
+          className="border-[0.5px] border-border p-5 md:p-10 rounded-[16px] bg-card relative overflow-hidden shadow-xl"
         >
           <h3 className="text-xl md:text-2xl font-semibold mb-4 text-fresh-high">The Friction Engine</h3>
           <p className="text-text-secondary text-sm md:text-base leading-relaxed font-light mb-8">

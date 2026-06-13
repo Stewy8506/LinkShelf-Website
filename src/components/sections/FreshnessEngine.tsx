@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { DecayingLink } from "../DecayingLink";
 
 export function FreshnessEngine() {
@@ -12,6 +12,16 @@ export function FreshnessEngine() {
   });
 
   const [progress, setProgress] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     setProgress(latest);
@@ -23,14 +33,14 @@ export function FreshnessEngine() {
   const card3Freshness = Math.max(0.02, 0.60 - progress * 0.58);
 
   return (
-    <section ref={containerRef} className="relative py-20 md:py-32 px-6 md:px-12 max-w-6xl mx-auto z-10 min-h-[300vh]">
-      <div className="sticky top-[12vh] md:top-[20vh]">
-        <div className="text-center mb-10 md:mb-16">
+    <section ref={containerRef} className="relative py-10 md:py-32 px-4 xs:px-6 md:px-12 max-w-6xl mx-auto z-10 min-h-[220vh] md:min-h-[300vh]">
+      <div className="sticky top-4 md:top-[20vh]">
+        <div className="text-center mb-6 md:mb-16">
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-3xl md:text-6xl font-semibold tracking-tight"
+            className="text-2xl xs:text-3xl md:text-6xl font-semibold tracking-tight"
           >
             The Freshness Engine
           </motion.h2>
@@ -39,21 +49,21 @@ export function FreshnessEngine() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="mt-4 md:mt-6 text-foreground/60 text-base md:text-lg max-w-2xl mx-auto font-light"
+            className="mt-2 md:mt-6 text-foreground/60 text-xs xs:text-sm md:text-lg max-w-2xl mx-auto font-light"
           >
             Scroll to see how links physically rot over time. Exponential decay ensures your reading list never becomes an overwhelming graveyard.
           </motion.p>
         </div>
 
-        <div className="flex flex-col items-center justify-center relative w-full max-w-3xl mx-auto h-auto min-h-[400px]">
+        <div className="flex flex-col items-center justify-center relative w-full max-w-3xl mx-auto h-auto min-h-0 md:min-h-[400px]">
           {/* Animated lines connecting the links (visual flair) */}
           <div className="absolute inset-y-0 left-1/2 w-px bg-gradient-to-b from-fresh-high/20 via-fresh-mid/20 to-fresh-low/20 -translate-x-1/2 hidden md:block" />
           
-          <motion.div className="w-full relative z-10 bg-surface p-6 md:p-8 rounded-[16px] border-[0.5px] border-border shadow-2xl">
+          <motion.div className="w-full relative z-10 bg-surface p-4 md:p-8 rounded-[16px] border-[0.5px] border-border shadow-2xl">
             <h3 className="text-xs font-mono mb-4 md:mb-6 text-text-tertiary uppercase tracking-widest text-center">Simulation</h3>
 
             {/* Timeline Progress Scrubber */}
-            <div className="mb-8 max-w-md mx-auto relative px-2">
+            <div className="mb-6 md:mb-8 max-w-md mx-auto relative px-2">
               <div className="absolute top-1/2 left-0 right-0 h-[1px] bg-border -translate-y-1/2" />
               <div 
                 className="absolute top-1/2 left-0 h-[1.5px] bg-fresh-high -translate-y-1/2" 
@@ -67,18 +77,18 @@ export function FreshnessEngine() {
                 ].map((m, idx) => {
                   const isActive = progress >= m.val;
                   return (
-                    <div key={idx} className="flex flex-col items-center select-none bg-surface px-2 relative z-10">
-                      <div className={`w-3.5 h-3.5 rounded-full border-[2px] transition-all flex items-center justify-center ${
+                    <div key={idx} className="flex flex-col items-center select-none bg-surface px-1 xs:px-2 relative z-10">
+                      <div className={`w-2.5 h-2.5 xs:w-3.5 xs:h-3.5 rounded-full border-[2px] transition-all flex items-center justify-center ${
                         isActive 
                           ? `${m.color} border-text-primary` 
                           : "bg-card border-border"
                       }`}>
-                        {isActive && <div className="w-1 h-1 rounded-full bg-background" />}
+                        {isActive && <div className="w-0.5 h-0.5 xs:w-1 xs:h-1 rounded-full bg-background" />}
                       </div>
-                      <span className={`text-[9px] font-mono mt-1.5 transition-colors uppercase tracking-wider ${isActive ? "text-text-primary" : "text-text-tertiary"}`}>
+                      <span className={`text-[8px] xs:text-[9px] font-mono mt-1.5 transition-colors uppercase tracking-wider ${isActive ? "text-text-primary" : "text-text-tertiary"}`}>
                         {m.name}
                       </span>
-                      <span className={`text-[8px] font-sans font-light mt-0.5 transition-colors ${isActive ? "text-text-secondary" : "text-text-tertiary/70"}`}>
+                      <span className={`text-[7px] xs:text-[8px] font-sans font-light mt-0.5 transition-colors ${isActive ? "text-text-secondary" : "text-text-tertiary/70"}`}>
                         {m.desc}
                       </span>
                     </div>
@@ -87,15 +97,15 @@ export function FreshnessEngine() {
               </div>
             </div>
 
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-                <DecayingLink title="Why Next.js App Router is the future" url="vercel.com/blog/app-router" freshness={card1Freshness} className="mx-0" />
-                <DecayingLink title="Rethinking Reactivity in UI" url="engineering.ui/reactivity" freshness={card2Freshness} delay={0.2} className="mx-0" />
-                <DecayingLink title="The end of traditional REST APIs" url="backend.dev/rest-is-dead" freshness={card3Freshness} delay={0.4} className="mx-0" />
+            <div className={isMobile ? "space-y-2" : "space-y-4"}>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6">
+                <DecayingLink title="Why Next.js App Router is the future" url="vercel.com/blog/app-router" freshness={card1Freshness} className="mx-0" compact={isMobile} />
+                <DecayingLink title="Rethinking Reactivity in UI" url="engineering.ui/reactivity" freshness={card2Freshness} delay={0.2} className="mx-0" compact={isMobile} />
+                <DecayingLink title="The end of traditional REST APIs" url="backend.dev/rest-is-dead" freshness={card3Freshness} delay={0.4} className="mx-0" compact={isMobile} />
               </div>
 
-              <div className="mt-8 md:mt-12 text-center border-t border-border pt-6 md:pt-8">
-                <p className="text-sm md:text-lg font-light text-text-primary">
+              <div className="mt-4 md:mt-12 text-center border-t border-border pt-4 md:pt-8">
+                <p className="text-xs xs:text-sm md:text-lg font-light text-text-primary leading-relaxed">
                   <span className="text-fresh-low font-medium">Stale links resurface.</span> The older they get, the more they demand your attention—until they eventually drop off the shelf.
                 </p>
               </div>

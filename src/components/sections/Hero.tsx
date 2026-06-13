@@ -10,7 +10,7 @@ export function Hero() {
   const scrollIndicatorOpacity = useTransform(scrollYProgress, [0, 0.05], [0.6, 0]);
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center pt-28 md:pt-36 pb-16 md:pb-24 px-6 md:px-12 overflow-hidden">
+    <section className="relative min-h-screen flex flex-col items-center justify-center pt-24 xs:pt-28 md:pt-36 pb-12 md:pb-24 px-4 xs:px-6 md:px-12 overflow-hidden">
       <div className="max-w-5xl w-full z-10 flex flex-col items-center text-center">
         <motion.div
           initial={{ opacity: 0, y: 15 }}
@@ -32,7 +32,7 @@ export function Hero() {
           initial={{ opacity: 0, filter: "blur(10px)", y: 20 }}
           animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
           transition={{ duration: 1.2, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="text-5xl sm:text-6xl md:text-8xl xl:text-[100px] font-semibold tracking-tighter leading-[0.9] text-foreground mix-blend-difference"
+          className="text-4xl xs:text-5xl sm:text-6xl md:text-8xl xl:text-[100px] font-semibold tracking-tighter leading-[0.9] text-foreground mix-blend-difference"
         >
           Your reading list, <br />
           <span className="text-foreground/50 italic font-light tracking-tight">decaying in real time.</span>
@@ -42,7 +42,7 @@ export function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.8 }}
-          className="mt-8 md:mt-12 text-base md:text-xl text-text-secondary max-w-2xl font-light tracking-wide mix-blend-difference"
+          className="mt-6 md:mt-12 text-sm xs:text-base md:text-xl text-text-secondary max-w-2xl font-light tracking-wide mix-blend-difference"
         >
           A highly opinionated cross-platform read-later application where saved links lose their freshness, pressure your attention, and eventually rot.
         </motion.p>
@@ -52,11 +52,11 @@ export function Hero() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 1 }}
-          className="mt-8 md:mt-10 flex flex-col sm:flex-row items-center gap-4 z-20 w-full sm:w-auto px-4 sm:px-0"
+          className="mt-6 md:mt-10 flex flex-col sm:flex-row items-center gap-3.5 md:gap-4 z-20 w-full sm:w-auto px-4 sm:px-0"
         >
           <a
             href="https://github.com/Stewy8506/LinkShelf/releases/latest/download/linkshelf-macos.zip"
-            className="w-full sm:w-auto"
+            className="block sm:inline-block w-full sm:w-auto"
           >
             <motion.button
               whileHover={{ scale: 1.03, y: -1 }}
@@ -70,7 +70,7 @@ export function Hero() {
           
           <a
             href="#features"
-            className="w-full sm:w-auto px-6 py-3.5 border-[0.5px] border-border hover:border-text-secondary/40 text-text-secondary hover:text-text-primary bg-card/30 rounded-full font-medium text-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
+            className="block sm:inline-block w-full sm:w-auto px-6 py-3.5 border-[0.5px] border-border hover:border-text-secondary/40 text-text-secondary hover:text-text-primary bg-card/30 rounded-full font-medium text-sm transition-all text-center justify-center flex items-center gap-2 cursor-pointer"
           >
             Explore features
           </a>
@@ -81,7 +81,7 @@ export function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 1.2 }}
-          className="mt-6 flex flex-wrap justify-center items-center gap-x-6 gap-y-2 text-[10px] font-mono uppercase tracking-wider text-text-tertiary z-20 px-4"
+          className="mt-4 flex flex-wrap justify-center items-center gap-x-6 gap-y-2 text-[10px] font-mono uppercase tracking-wider text-text-tertiary z-20 px-4"
         >
           <span>iOS App Store</span>
           <span>&middot;</span>

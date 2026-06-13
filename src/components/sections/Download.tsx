@@ -240,12 +240,12 @@ export function Download() {
   };
 
   return (
-    <section id="download" className="relative py-20 md:py-32 px-6 md:px-12 max-w-6xl mx-auto z-10 bg-transparent">
-      <div className="text-center mb-12 md:mb-16">
-        <h2 className="text-3xl md:text-5xl font-semibold tracking-tight text-text-primary">
+    <section id="download" className="relative py-12 md:py-32 px-4 xs:px-6 md:px-12 max-w-6xl mx-auto z-10 bg-transparent">
+      <div className="text-center mb-8 md:mb-16">
+        <h2 className="text-2xl xs:text-3xl md:text-5xl font-semibold tracking-tight text-text-primary">
           Get LinkShelf
         </h2>
-        <p className="mt-4 text-text-secondary text-base md:text-lg max-w-xl mx-auto font-light">
+        <p className="mt-3 text-text-secondary text-xs xs:text-sm md:text-lg max-w-xl mx-auto font-light">
           Take control of your digital reading shelf. Available natively across all platforms.
         </p>
       </div>
@@ -378,14 +378,14 @@ export function Download() {
 
                 {/* Main Action CTAs */}
                 <div className="space-y-6">
-                  <div className="flex flex-wrap items-center gap-3">
+                  <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
                     {currentPlatform.actions.map((act, idx) => {
                       if (act.disabled) {
                         return (
-                          <div key={idx} className="relative group/tooltip inline-block">
+                          <div key={idx} className="relative group/tooltip w-full sm:w-auto">
                             <button
                               disabled
-                              className={`px-6 py-3 rounded-full text-xs font-semibold tracking-wide flex items-center gap-2 cursor-not-allowed transition-all ${act.primary
+                              className={`px-6 py-3 rounded-full text-xs font-semibold tracking-wide flex items-center justify-center gap-2 cursor-not-allowed transition-all w-full sm:w-auto ${act.primary
                                   ? "bg-text-primary/10 text-text-primary/30 border border-border/40"
                                   : "bg-surface border-[0.5px] border-border text-text-tertiary"
                                 }`}
@@ -404,13 +404,17 @@ export function Download() {
                         <a
                           key={idx}
                           href={act.href}
-                          className={`px-6 py-3 rounded-full text-xs font-semibold tracking-wide flex items-center gap-2 cursor-pointer transition-all ${act.primary
-                              ? "bg-text-primary text-background hover:bg-text-primary/95 shadow-md"
-                              : "bg-surface border-[0.5px] border-border text-text-secondary hover:text-text-primary hover:border-text-secondary/30"
-                            }`}
+                          className="block w-full sm:w-auto"
                         >
-                          {act.primary ? <ArrowDown className="w-3.5 h-3.5" /> : <ExternalLink className="w-3.5 h-3.5" />}
-                          {act.label}
+                          <button
+                            className={`px-6 py-3 rounded-full text-xs font-semibold tracking-wide flex items-center justify-center gap-2 cursor-pointer transition-all w-full sm:w-auto ${act.primary
+                                ? "bg-text-primary text-background hover:bg-text-primary/95 shadow-md"
+                                : "bg-surface border-[0.5px] border-border text-text-secondary hover:text-text-primary hover:border-text-secondary/30"
+                              }`}
+                          >
+                            {act.primary ? <ArrowDown className="w-3.5 h-3.5" /> : <ExternalLink className="w-3.5 h-3.5" />}
+                            {act.label}
+                          </button>
                         </a>
                       );
                     })}

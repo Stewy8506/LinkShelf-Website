@@ -23,7 +23,7 @@ export function Header() {
           : "mix-blend-difference"
       }`}
     >
-      <div className="flex items-center justify-between px-6 md:px-12 py-5 max-w-7xl mx-auto w-full relative">
+      <div className="flex items-center justify-between px-4 sm:px-6 md:px-12 py-4 md:py-5 max-w-7xl mx-auto w-full relative">
         <div className="flex items-center gap-2 select-none">
           <span className="font-semibold text-lg tracking-tight text-text-primary">LinkShelf</span>
           <span className="relative flex h-1.5 w-1.5">

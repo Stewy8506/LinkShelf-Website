@@ -38,7 +38,7 @@ function SyncVisual() {
         backgroundSize: '16px 16px'
       }} />
 
-      <div className="flex items-center gap-2 sm:gap-4 z-10 w-full justify-around max-w-sm flex-1">
+      <div className="flex items-center gap-2 sm:gap-4 z-10 w-full justify-around max-w-sm flex-1 scale-[0.85] xs:scale-100 origin-center">
         {/* Desktop Screen mockup */}
         <div className="w-24 sm:w-28 bg-card border-[0.5px] border-border rounded-[6px] p-2 flex flex-col gap-1.5 shadow-lg select-none">
           <div className="flex gap-1">
@@ -338,7 +338,7 @@ function ExtensionVisual() {
   return (
     <div className="h-44 w-full bg-surface border-[0.5px] border-border rounded-[8px] flex flex-col justify-center items-center p-4 mt-6 overflow-hidden relative shadow-inner">
       {/* Mock Browser Window */}
-      <div className="w-full max-w-[250px] sm:max-w-xs bg-card border-[0.5px] border-border rounded-[6px] overflow-hidden shadow-lg flex flex-col">
+      <div className="w-full max-w-[210px] xs:max-w-[250px] sm:max-w-xs bg-card border-[0.5px] border-border rounded-[6px] overflow-hidden shadow-lg flex flex-col">
         {/* Address bar */}
         <div className="bg-surface h-5 border-b border-border flex items-center px-2 gap-2 justify-between select-none">
           <div className="flex gap-0.5">
@@ -431,12 +431,12 @@ const features = [
 
 export function Features() {
   return (
-    <section id="features" className="relative py-20 md:py-32 px-6 md:px-12 max-w-6xl mx-auto z-10 bg-transparent">
+    <section id="features" className="relative py-12 md:py-32 px-4 xs:px-6 md:px-12 max-w-6xl mx-auto z-10 bg-transparent">
       <div className="text-center mb-16 md:mb-24">
         <h2 className="text-3xl md:text-5xl font-semibold tracking-tight text-text-primary">Engineered for focus.</h2>
       </div>
 
-      <div className="flex overflow-x-auto md:grid md:grid-cols-2 gap-6 md:gap-8 pb-8 md:pb-0 snap-x snap-mandatory scrollbar-none -mx-6 px-6 md:mx-0 md:px-0">
+      <div className="flex overflow-x-auto md:grid md:grid-cols-2 gap-6 md:gap-8 pb-8 md:pb-0 snap-x snap-mandatory scrollbar-none -mx-4 px-4 xs:-mx-6 xs:px-6 md:mx-0 md:px-0">
         {features.map((feature, i) => (
           <motion.div
             key={i}
