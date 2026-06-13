@@ -215,7 +215,7 @@ function EcosystemScene({
         intensity={2.0} 
         color="#A6C2F5"
         castShadow
-        shadow-mapSize={[2048, 2048]}
+        shadow-mapSize={[1024, 1024]}
         shadow-camera-left={-15}
         shadow-camera-right={15}
         shadow-camera-top={15}

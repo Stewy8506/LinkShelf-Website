@@ -2,7 +2,7 @@
 
 import { useFrame } from "@react-three/fiber";
 import type { MotionValue } from "framer-motion";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
 interface DustData {
@@ -30,7 +30,6 @@ const DUST_PARTICLES: DustData[] = (() => {
 })();
 
 // Geometry and vector pools for garbage-collection-free calculations inside useFrame
-const tempPos = new THREE.Vector3();
 const tempVec1 = new THREE.Vector3();
 const tempVec2 = new THREE.Vector3();
 const beamStart = new THREE.Vector3(0, 2.5, -23.4);
@@ -46,73 +45,100 @@ function getDistanceToBeam(pos: THREE.Vector3, t1: THREE.Vector3, t2: THREE.Vect
   return pos.distanceTo(t2);
 }
 
+// Scratch variables for instanced updates
+const tempMatrix = new THREE.Matrix4();
+const tempPosition = new THREE.Vector3();
+const tempQuaternion = new THREE.Quaternion();
+const tempScale = new THREE.Vector3();
+const tempColor = new THREE.Color();
+
 interface FloatingEntitiesProps {
   scrollYProgress: MotionValue<number>;
 }
 
-export function FloatingEntities({ scrollYProgress: _scrollYProgress }: FloatingEntitiesProps) {
-  const meshesRef = useRef<(THREE.Mesh | null)[]>([]);
+export function FloatingEntities(_props: FloatingEntitiesProps) {
+  const meshRef = useRef<THREE.InstancedMesh>(null!);
+  const particles = useRef<DustData[]>([]);
+
+  // Clone particles on mount to maintain a clean local tracking instance
+  useEffect(() => {
+    particles.current = DUST_PARTICLES.map((d) => ({
+      pos: [...d.pos] as [number, number, number],
+      speed: d.speed,
+      scale: d.scale,
+      opacity: d.opacity,
+    }));
+  }, []);
 
   useFrame((state, delta) => {
-    meshesRef.current.forEach((mesh, idx) => {
-      if (!mesh) return;
-      const data = DUST_PARTICLES[idx];
-      
+    if (!meshRef.current || particles.current.length === 0) return;
+
+    const list = particles.current;
+    const count = list.length;
+
+    for (let idx = 0; idx < count; idx++) {
+      const data = list[idx];
+
       // Ambient drift motion
-      mesh.position.y += Math.sin(state.clock.elapsedTime * data.speed + idx) * delta * 0.12;
-      mesh.position.x += Math.cos(state.clock.elapsedTime * data.speed * 0.5 + idx) * delta * 0.06;
+      data.pos[1] += Math.sin(state.clock.elapsedTime * data.speed + idx) * delta * 0.12;
+      data.pos[0] += Math.cos(state.clock.elapsedTime * data.speed * 0.5 + idx) * delta * 0.06;
 
       // Wrap out-of-bounds particles to keep density stable
-      if (mesh.position.y > 8) mesh.position.y = -6;
-      if (mesh.position.y < -6) mesh.position.y = 8;
-      if (mesh.position.x > 15) mesh.position.x = -15;
-      if (mesh.position.x < -15) mesh.position.x = 15;
-      
-      tempPos.copy(mesh.position);
-      const dist = getDistanceToBeam(tempPos, tempVec1, tempVec2);
-      
+      if (data.pos[1] > 8) data.pos[1] = -6;
+      if (data.pos[1] < -6) data.pos[1] = 8;
+      if (data.pos[0] > 15) data.pos[0] = -15;
+      if (data.pos[0] < -15) data.pos[0] = 15;
+
+      tempPosition.set(...data.pos);
+      const dist = getDistanceToBeam(tempPosition, tempVec1, tempVec2);
+
       // Light beam cone radius grows from 2.0 at window (z = -23.4) to 4.8 at table (z = 0)
-      const relativeZ = Math.max(0, Math.min(1, (mesh.position.z - (-23.4)) / 23.4));
+      const relativeZ = Math.max(0, Math.min(1, (data.pos[2] - -23.4) / 23.4));
       const beamRadius = 2.0 + relativeZ * 2.8;
 
-      const mat = mesh.material as THREE.MeshBasicMaterial;
-      if (!mat) return;
+      let currentScale = data.scale;
+      let opacity = data.opacity;
+      let colorHex = "#FFDDAA"; // Warm tungsten reflection default
 
-      if (dist < beamRadius && mesh.position.z > -23.4 && mesh.position.z < 2.0) {
+      if (dist < beamRadius && data.pos[2] > -23.4 && data.pos[2] < 2.0) {
         // Glistening effect inside the moonbeam ray
         const glintFactor = (1.0 - dist / beamRadius) * (Math.sin(state.clock.elapsedTime * 6.0 + idx) * 0.4 + 0.6);
-        mesh.scale.setScalar(data.scale * (1.0 + glintFactor * 2.5));
-        mat.opacity = Math.min(0.95, data.opacity + glintFactor * 0.65);
-        mat.color.set("#E4F2FF"); // Cool glinting moonlit color
-      } else {
-        // Normal warm amber glow in the dark
-        mesh.scale.setScalar(data.scale);
-        mat.opacity = data.opacity;
-        mat.color.set("#FFDDAA"); // Warm tungsten reflection
+        currentScale = data.scale * (1.0 + glintFactor * 2.5);
+        opacity = Math.min(0.95, data.opacity + glintFactor * 0.65);
+        colorHex = "#E4F2FF"; // Cool glistening moonlit blue
       }
-    });
+
+      // Compose instance transform matrix
+      tempScale.set(currentScale, currentScale, currentScale);
+      tempQuaternion.set(0, 0, 0, 1); // Identity rotation for particles
+      tempMatrix.compose(tempPosition, tempQuaternion, tempScale);
+      meshRef.current.setMatrixAt(idx, tempMatrix);
+
+      // Mix particle opacity directly into instance color because standard InstancedMesh basic material
+      // doesn't support individual alphas out of the box. Since background is black, color * opacity
+      // yields mathematically and visually identical pixels.
+      tempColor.set(colorHex).multiplyScalar(opacity);
+      meshRef.current.setColorAt(idx, tempColor);
+    }
+
+    meshRef.current.instanceMatrix.needsUpdate = true;
+    if (meshRef.current.instanceColor) {
+      meshRef.current.instanceColor.needsUpdate = true;
+    }
   });
 
   return (
-    <group>
-      {DUST_PARTICLES.map((dust, idx) => (
-        <mesh 
-          key={idx} 
-          ref={(el) => {
-            meshesRef.current[idx] = el;
-          }}
-          position={dust.pos} 
-          scale={dust.scale}
-        >
-          <sphereGeometry args={[1, 6, 6]} />
-          <meshBasicMaterial 
-            color="#FFDDAA" 
-            transparent 
-            opacity={dust.opacity} 
-            depthWrite={false}
-          />
-        </mesh>
-      ))}
-    </group>
+    <instancedMesh
+      ref={meshRef}
+      args={[null as unknown as THREE.BufferGeometry, null as unknown as THREE.Material, 200]}
+      frustumCulled={false}
+    >
+      <sphereGeometry args={[1, 6, 6]} />
+      <meshBasicMaterial 
+        color="#ffffff" 
+        transparent={true} 
+        depthWrite={false} 
+      />
+    </instancedMesh>
   );
 }
